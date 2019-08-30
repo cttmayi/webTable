@@ -1,0 +1,66 @@
+{% autoescape None %}
+
+<table class="display compact hover order-column" style="width:100%" id="example">
+    <thead>
+        <tr>
+            {% for th in datatables['th'] %}
+                <th>{{ th['name'] }}</th>
+            {% end %}
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<script type="text/javascript">
+    $(document).ready(function () {
+        $("#example").dataTable({
+            //"iDisplayLength":10,
+
+            ajax: {
+                url: '/_query/{{ id }}/{{ p0 }}',
+                dataSrc: ''
+            },
+
+            "paging": false,
+            "order": [[ 0, "desc" ]],
+            //'bPaginate': true,
+            //"bDestory": true,
+            //"bRetrieve": true,
+            //"bFilter":true,
+            //"bSort": false,
+            //"bProcessing": true,
+            "aoColumns": [
+                {% for th in datatables['th'] %}
+                {
+                    "mDataProp": "{{ th['field'] }}",
+                    "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                        $(nTd).addClass("{{ th['field'] }}").attr('id', oData.{{ datatables['id'] }} );
+                    }
+                },
+                {% end %}
+            ],
+            //"sDom": "<'row-fluid'<'span6 myBtnBox'><'span6'f>r>t<'row-fluid'<'span6'i><'span6 'p>>",
+            //"language": {
+            //    "url": "http://cdn.datatables.net/plug-ins/e9421181788/i18n/Chinese.json"
+            //},
+            "fnDrawCallback": function (data, x) {
+                {% for th in datatables['th'] %}
+                    {% if th['editor'] == 'edit' %}
+                        $("#example tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}");
+                    {% end %}
+                    {% if th['editor'] == 'select' %}
+                        $("#example tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}",
+                            {
+
+                                data: {{ th['data'] }},
+                                type: 'select'
+                                //submit : '确定',
+                                //submitdata: { _method: "post"}
+                            });
+                    {% end %}
+                {% end %}
+            }
+        });
+    });
+</script>

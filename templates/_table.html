@@ -1,0 +1,90 @@
+{% autoescape None %}
+
+<!DOCTYPE html>
+<html lang="en">
+
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>Document</title>
+        <link href="https://cdn.bootcss.com/twitter-bootstrap/4.3.1/css/bootstrap.css" rel="stylesheet">
+
+        <script src="https://cdn.bootcss.com/jquery/3.4.1/jquery.min.js"></script>
+        
+
+        <link href="https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css" rel="stylesheet">
+        <script src="https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"></script>
+
+        <script type="text/javascript" src="/static/jeditable/jquery.jeditable.js"></script>
+
+    </head>
+
+    <body>
+        <table cellpadding="0" cellspacing="0" border="0" class="table table-striped table-bordered table-hover" id="example">
+            <thead>
+                <tr>
+                    <th>昵称</th>
+                    <th>技能</th>
+                    <th>添加时间</th>
+                    <th>备注</th>
+                </tr>
+            </thead>
+            <tbody>
+            </tbody>
+        </table>
+
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $("#example").dataTable({
+                    //"iDisplayLength":10,
+
+                    ajax: {
+                        url: '/query/{{ id }}',
+                        dataSrc: ''
+                    },
+
+                    //'bPaginate': true,
+                    "bDestory": true,
+                    "bRetrieve": true,
+                    //"bFilter":true,
+                    "bSort": false,
+                    //"bProcessing": true,
+                    "aoColumns": [
+                        {
+                            "mDataProp": "productid",
+                            "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                                $(nTd).addClass('productid').attr('id', 'td_' + sData + '_' + oData.id);
+                            }
+                        },
+                        {
+                            "mDataProp": "unitcost",
+                            "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
+                                $(nTd).addClass('unitcost').attr('id', 'td_' + sData + '_' + oData.id);
+                                //$(nTd).html("<select class='selectTd' id=td_"+sData+"_"+oData.id+"><option value="+sData+" selected>"+sData+"</option></select>");
+                            }
+                        },
+                        {"mDataProp": "itemid"},
+                        {"mDataProp": "status"}
+                    ],
+                    "sDom": "<'row-fluid'<'span6 myBtnBox'><'span6'f>r>t<'row-fluid'<'span6'i><'span6 'p>>",
+                    //"language": {
+                    //    "url": "http://cdn.datatables.net/plug-ins/e9421181788/i18n/Chinese.json"
+                    //},
+                    "fnDrawCallback": function (data, x) {
+                        $('#example tbody td.productid').editable('editable.php');
+                        $('#example tbody td.unitcost').editable('editableSelect.php',
+                            {
+                                //loadurl: 'json.php',
+                                data:{"10":"10","20":"20","30":"30"},
+                                type: 'select'
+                                //submit : '确定',
+                                //submitdata: { _method: "post"}
+                            });
+                    }
+                });
+            });
+        </script>
+    </body>
+
+</html>
