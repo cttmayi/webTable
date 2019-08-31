@@ -31,6 +31,7 @@ def html(p0):
     datatables = {}
     datatables['title'] = 'T'
     datatables['id'] = 'itemid'
+    datatables['order'] = '[[ 1, "desc" ]]'
     #datatables['number'] = True 
     #datatables['pageLength'] = 25
     datatables['th'] = []
