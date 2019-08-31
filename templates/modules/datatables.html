@@ -1,10 +1,10 @@
 {% autoescape None %}
 
-<table class="display compact hover order-column" style="width:100%" id="example"></table>
+<table class="display compact hover order-column" style="width:100%" id="t"></table>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        var t = $("#example").dataTable({
+        var t = $("#t").dataTable({
             //"iDisplayLength":10,
 
             ajax: {
@@ -35,6 +35,7 @@
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).addClass("{{ th['field'] }}").attr('id', oData.{{ datatables['id'] }} );
                     },
+                    "defaultContent": '',
                     "width": "{{ th['width'] }}",
                 },
                 {% end %}
@@ -49,16 +50,14 @@
                 });
                 {% for th in datatables['th'] %}
                     {% if th['editor'] == 'edit' %}
-                        $("#example tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}");
+                        $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}");
                     {% end %}
                     {% if th['editor'] == 'select' %}
-                        $("#example tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}",
+                        $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}",
                             {
 
                                 data: {{ th['data'] }},
                                 type: 'select'
-                                //submit : '确定',
-                                //submitdata: { _method: "post"}
                             });
                     {% end %}
                 {% end %}
