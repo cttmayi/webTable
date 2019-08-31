@@ -26,6 +26,7 @@ def html(p0):
     datatables = {}
     datatables['title'] = 'T'
     datatables['id'] = 'itemid'
+    datatables['number'] = True 
     datatables['th'] = []
     datatables['th'].append(th('itemid', 'itemid', 100))
     datatables['th'].append(th('productid', 'productid', 100))

@@ -1,20 +1,10 @@
 {% autoescape None %}
 
-<table class="display compact hover order-column" style="width:100%" id="example">
-    <thead>
-        <tr>
-            {% for th in datatables['th'] %}
-                <th>{{ th['name'] }}</th>
-            {% end %}
-        </tr>
-    </thead>
-    <tbody>
-    </tbody>
-</table>
+<table class="display compact hover order-column" style="width:100%" id="example"></table>
 
 <script type="text/javascript">
     $(document).ready(function () {
-        $("#example").dataTable({
+        var t = $("#example").dataTable({
             //"iDisplayLength":10,
 
             ajax: {
@@ -23,7 +13,7 @@
             },
 
             "paging": false,
-            "order": [[ 0, "desc" ]],
+            "order": [[ 1, "desc" ]],
             //'bPaginate': true,
             //"bDestory": true,
             //"bRetrieve": true,
@@ -31,12 +21,21 @@
             //"bSort": false,
             //"bProcessing": true,
             "aoColumns": [
+                {
+                    "title": "No.",
+                    "defaultContent": '',
+                    "searchable": false,
+                    "orderable": false,
+                    "width": "40px",
+                },
                 {% for th in datatables['th'] %}
                 {
+                    "title": "{{ th['name'] }}",
                     "mDataProp": "{{ th['field'] }}",
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).addClass("{{ th['field'] }}").attr('id', oData.{{ datatables['id'] }} );
-                    }
+                    },
+                    "width": "100px",
                 },
                 {% end %}
             ],
@@ -45,6 +44,9 @@
             //    "url": "http://cdn.datatables.net/plug-ins/e9421181788/i18n/Chinese.json"
             //},
             "fnDrawCallback": function (data, x) {
+                this.api().column(0).nodes().each(function(cell, i) {
+                    cell.innerHTML = i + 1;
+                });
                 {% for th in datatables['th'] %}
                     {% if th['editor'] == 'edit' %}
                         $("#example tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}");
@@ -62,5 +64,6 @@
                 {% end %}
             }
         });
+
     });
 </script>
