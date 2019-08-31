@@ -20,7 +20,12 @@ class DataTablesModule(tornado.web.UIModule):
     #    return ".addition {color: #A1CAF1}"
 
     def css_files(self):
-        return "https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css"
+        return [
+            "https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css",
+        ]
 
     def javascript_files(self):
-        return "https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js"
+        return [
+            "https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js", 
+            "/static/jeditable/jquery.jeditable.js",
+        ]
