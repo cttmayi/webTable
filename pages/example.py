@@ -32,7 +32,7 @@ def html(p0):
     datatables['title'] = 'T'
     datatables['id'] = 'itemid'
     #datatables['number'] = True 
-    datatables['paging'] = 'true'
+    #datatables['pageLength'] = 25
     datatables['th'] = []
     datatables['th'].append(th('itemid', 'itemid', "100px"))
     datatables['th'].append(th('productid', 'productid', "200px"))

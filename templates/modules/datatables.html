@@ -16,8 +16,13 @@
             //buttons: [
             //    'excel'
             //],
+            {% if 'pageLength' in datatables.keys() %}
+            "paging": true,
+            "pageLength": {{ datatables['pageLength'] }},
+            {% else %}
+            "paging": false,
+            {% end %}
 
-            "paging": {{ datatables['paging'] }},
             "order": [[ 1, "desc" ]],
             //'bPaginate': true,
             //"bDestory": true,
