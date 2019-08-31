@@ -35,7 +35,7 @@
                     "fnCreatedCell": function (nTd, sData, oData, iRow, iCol) {
                         $(nTd).addClass("{{ th['field'] }}").attr('id', oData.{{ datatables['id'] }} );
                     },
-                    "width": "100px",
+                    "width": "{{ th['width'] }}",
                 },
                 {% end %}
             ],

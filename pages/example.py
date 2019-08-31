@@ -18,7 +18,12 @@ def th(name, field, width='*', editor='text', data=[]):
     for d in data:
         map_data[d] = d
 
-    return {'name': name, 'field': field, 'editor': editor, 'data': str(map_data)}
+    return {
+        'name': name, 
+        'field': field,
+        'width': width, 
+        'editor': editor, 
+        'data': str(map_data)}
 
 def html(p0):
     ret = {}
@@ -28,11 +33,11 @@ def html(p0):
     datatables['id'] = 'itemid'
     datatables['number'] = True 
     datatables['th'] = []
-    datatables['th'].append(th('itemid', 'itemid', 100))
-    datatables['th'].append(th('productid', 'productid', 100))
-    datatables['th'].append(th('listprice', 'listprice', 100, 'edit'))
-    datatables['th'].append(th('unitcost', 'unitcost', 100, 'select', ['100', '200']))
-    datatables['th'].append(th('attr1', 'attr1', 100))
+    datatables['th'].append(th('itemid', 'itemid', "100px"))
+    datatables['th'].append(th('productid', 'productid', "200px"))
+    datatables['th'].append(th('listprice', 'listprice', "200px", 'edit'))
+    datatables['th'].append(th('unitcost', 'unitcost', "200px", 'select', ['100', '200']))
+    datatables['th'].append(th('attr1', 'attr1', "200px"))
     datatables['th'].append(th('status', 'status'))
 
     ret['title'] = 'CQ'
