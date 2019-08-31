@@ -8,7 +8,7 @@
             //"iDisplayLength":10,
 
             ajax: {
-                url: '/_query/{{ id }}/{{ p0 }}',
+                url: '/_query/{{ name }}/{{ p0 }}',
                 dataSrc: ''
             },
 
@@ -55,10 +55,10 @@
                 });
                 {% for th in datatables['th'] %}
                     {% if th['editor'] == 'edit' %}
-                        $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}");
+                        $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ name }}/{{ p0 }}/{{ th['field'] }}");
                     {% end %}
                     {% if th['editor'] == 'select' %}
-                        $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ id }}/{{ p0 }}/{{ th['field'] }}",
+                        $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ name }}/{{ p0 }}/{{ th['field'] }}",
                             {
 
                                 data: {{ th['data'] }},

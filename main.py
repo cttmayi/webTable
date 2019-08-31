@@ -18,8 +18,8 @@ define("debug", default=True, help="run on debug mode", type=bool)
 
 
 class DefaultHandler(tornado.web.RequestHandler):
-    def get(self, id, p0):
-        page = __import__('pages.'+id, fromlist=[id])
+    def get(self, name, p0):
+        page = __import__('pages.'+name, fromlist=[name])
         html = page.html(p0)
 
         if 'template' in html.keys() and html['template'] is not None:
@@ -27,23 +27,22 @@ class DefaultHandler(tornado.web.RequestHandler):
         else:
             template = 'default.html'
 
-        self.render(template, id=id, p0=p0, html=html)
+        self.render(template, name=name, p0=p0, html=html)
 
 class QueryHandler(tornado.web.RequestHandler):
-    def get(self, id, p0):
-        page = __import__('pages.'+id, fromlist=[id])
+    def get(self, name, p0):
+        page = __import__('pages.'+name, fromlist=[name])
         out = page.query(p0)
         self.write(json.dumps(out))
 
 class UpdateHandler(tornado.web.RequestHandler):
-    def post(self, id, p0, field):
-        page = __import__('pages.'+id, fromlist=[id])
-        #data = json_decode(self.request.body)
+    def post(self, name, p0, field):
+        page = __import__('pages.'+name, fromlist=[name])
 
-        id = self.get_argument('id')
+        db_id = self.get_argument('id')
         value = self.get_argument('value')
 
-        is_ok = page.update(p0, id, field, value)
+        is_ok = page.update(p0, db_id, field, value)
         if is_ok:
             self.write(value)
 

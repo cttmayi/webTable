@@ -55,12 +55,12 @@ def query(p0):
 
     return ret
 
-def update(p0, id, field, value):
+def update(p0, db_id, field, value):
     body = {
         field: value
     }
 
-    db.update(DB, id, body)
+    db.update(DB, db_id, body)
     return True
 
 
