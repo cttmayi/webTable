@@ -31,6 +31,7 @@
             //"bSort": false,
             //"bProcessing": true,
             "aoColumns": [
+                {% if 'number'in datatables.keys() and datatables['number'] %}
                 {
                     "title": "No.",
                     "defaultContent": '',
@@ -38,6 +39,7 @@
                     "orderable": false,
                     "width": "40px",
                 },
+                {% end %}
                 {% for th in datatables['th'] %}
                 {
                     "title": "{{ th['name'] }}",
@@ -55,9 +57,11 @@
             //    "url": "http://cdn.datatables.net/plug-ins/e9421181788/i18n/Chinese.json"
             //},
             "fnDrawCallback": function (data, x) {
+                {% if 'number'in datatables.keys() and datatables['number'] %}
                 this.api().column(0).nodes().each(function(cell, i) {
                     cell.innerHTML = i + 1;
                 });
+                {% end %}                                
                 {% for th in datatables['th'] %}
                     {% if th['editor'] == 'edit' %}
                         $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ name }}/{{ p0 }}/{{ th['field'] }}");
