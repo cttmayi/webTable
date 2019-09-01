@@ -4,6 +4,7 @@
 from database.dbelasticsearch import DbElasticsearch
 from database.dbdummy import DbDummy
 
+import module.datatables as dt
 
 
 #db = DbElasticsearch()
@@ -13,40 +14,27 @@ DB = 'example'
 db.create(DB)
 
 
-def th(name, field, width='*', editor='text', data=[]):
-    map_data = {}
-    for d in data:
-        map_data[d] = d
-
-    return {
-        'name': name, 
-        'field': field,
-        'width': width, 
-        'editor': editor, 
-        'data': str(map_data)}
-
 def html(p0):
     ret = {}
 
     datatables = {}
-    datatables['title'] = 'T'
     datatables['id'] = 'itemid'
-    datatables['order'] = '[[ 1, "desc" ]]'
-    datatables['number'] = True 
-    #datatables['pageLength'] = 25
+    datatables['order'] = [[ 1, "desc" ]]
+    datatables['number'] = True
+    datatables['scrollY'] = 'window.screen.availHeight'
+    #datatables['pageLength'] = 25 # 10, 25, 50, 100
     datatables['th'] = []
-    datatables['th'].append(th('itemid', 'itemid', "100px"))
-    datatables['th'].append(th('productid', 'productid', "200px"))
-    datatables['th'].append(th('listprice', 'listprice', "200px", 'edit'))
-    datatables['th'].append(th('unitcost', 'unitcost', "200px", 'select', ['100', '200']))
-    datatables['th'].append(th('attr1', 'attr1', "200px"))
-    datatables['th'].append(th('status', 'status'))
+    datatables['th'].append(dt.th('itemid', 'itemid', "100px"))
+    datatables['th'].append(dt.th('productid', 'productid', "200px"))
+    datatables['th'].append(dt.th('listprice', 'listprice', "200px", 'edit'))
+    datatables['th'].append(dt.th('unitcost', 'unitcost', "200px", 'select', ['100', '200']))
+    datatables['th'].append(dt.th('attr1', 'attr1', "200px"))
+    datatables['th'].append(dt.th('status', 'status'))
 
     ret['title'] = 'CQ'
     ret['datatables'] = datatables
 
     #ret['template'] = 'example'
-    #ret['th'] = _table_th()
     return ret
 
 
