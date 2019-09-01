@@ -1,4 +1,4 @@
-# webTable
+# webTable 
 本应用运行于Tornado, 用于快速开发表格, 用于共享数据, 快速编辑.
 前端的部分主要基于datatables,以及其插件jeditable.
 
@@ -18,7 +18,6 @@ http://127.0.0.1/example/_ 中的 example 即为如下page页面下的example.py
 ![image.png](https://img.hacpai.com/file/2019/09/image-3975201a.png)
 
 # 客制化
-
 ```python
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
@@ -85,6 +84,10 @@ for i in range(100):
     insert(db, 'TV.'+str(i), 1000)
 
 ```
+
+# 博客
+http://www.gcsjj.cn/tags/webTable
+
 
 
 
