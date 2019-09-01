@@ -49,7 +49,6 @@ def update(p0, db_id, field, value):
     return True
 
 
-
 ##########################################################
 # 范例 Dummy数据库的内容插入
 def insert(db, id, price):
