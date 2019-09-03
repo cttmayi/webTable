@@ -11,9 +11,10 @@ from tornado.escape import json_decode, json_encode
 
 import module.datatables
 
+import conf
 from tornado.options import define, options
-define("port", default=80, help="run on the given port", type=int)
-define("debug", default=True, help="run on debug mode", type=bool)
+define("port", default=conf.port, help="run on the given port", type=int)
+define("debug", default=conf.debug, help="run on debug mode", type=bool)
 
 
 
