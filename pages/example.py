@@ -6,6 +6,8 @@ from database.dbdummy import DbDummy
 
 import module.datatables as dt
 
+import conf
+
 #db = DbElasticsearch() # 本代码支持使用Elasticsearch
 db = DbDummy() # Dummy数据库(使用), 用于调试
 
@@ -41,11 +43,16 @@ def query(p0):
     ret = db.query(DB)
     return ret
 
-def update(p0, db_id, field, value):
+def update_thread(p0, db_id, field, value):
+    #print('update_thread', p0, db_id, field, value)
     body = {
         field: value
     }
     db.update(DB, db_id, body)
+
+def update(p0, db_id, field, value):
+    #conf.queue.put(('example', p0, db_id, field, value))
+    update_thread(p0, db_id, field, value)
     return True
 
 

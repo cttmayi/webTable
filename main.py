@@ -11,6 +11,8 @@ from tornado.escape import json_decode, json_encode
 
 import module.datatables
 
+from multiprocessing import Process, Queue
+
 import conf
 from tornado.options import define, options
 define("port", default=conf.port, help="run on the given port", type=int)
@@ -48,7 +50,23 @@ class UpdateHandler(tornado.web.RequestHandler):
             self.write(value)
 
 
+def _update_process(q):
+    print('update_process ready!')
+    while True:
+        #if not q.empty():
+        name, p0, db_id, field, value = q.get(True)
+        print('q:', name, p0, db_id, field, value)
+        page = __import__('pages.'+name, fromlist=[name])
+        page.update_thread(p0, db_id, field, value)
+
+
 if __name__ == "__main__":
+    if conf.queue:
+        q = Queue()
+        conf.queue = q
+        db_process = Process(target=_update_process, args=(q,))
+        db_process.start()
+
     tornado.options.parse_command_line()
     app = tornado.web.Application(
         handlers=[
