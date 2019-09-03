@@ -1,5 +1,5 @@
 import tornado.web
-
+import conf
 
 def th(name, field, width='*', editor='text', data=[]):
     map_data = {}
@@ -32,7 +32,8 @@ class DataTablesModule(tornado.web.UIModule):
             "modules/datatables.html",
             name = name,
             p0 = p0,
-            datatables = self._datatables(datatables)
+            datatables = self._datatables(datatables),
+            conf = conf,
         )
 
     def css_files(self):

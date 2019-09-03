@@ -8,7 +8,7 @@
             //"iDisplayLength":10,
 
             ajax: {
-                url: '/_query/{{ name }}/{{ p0 }}',
+                url: '/{{ conf.site }}_query/{{ name }}/{{ p0 }}',
                 dataSrc: ''
             },
             scrollY: {{ datatables['scrollY'] }},
@@ -64,10 +64,10 @@
                 {% end %}                                
                 {% for th in datatables['th'] %}
                     {% if th['editor'] == 'edit' %}
-                        $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ name }}/{{ p0 }}/{{ th['field'] }}");
+                        $("#t tbody td.{{ th['field'] }}").editable("/{{ conf.site }}_update/{{ name }}/{{ p0 }}/{{ th['field'] }}");
                     {% end %}
                     {% if th['editor'] == 'select' %}
-                        $("#t tbody td.{{ th['field'] }}").editable("/_update/{{ name }}/{{ p0 }}/{{ th['field'] }}",
+                        $("#t tbody td.{{ th['field'] }}").editable("/{{ conf.site }}_update/{{ name }}/{{ p0 }}/{{ th['field'] }}",
                             {
 
                                 data: {{ th['data'] }},

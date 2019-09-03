@@ -52,9 +52,9 @@ if __name__ == "__main__":
     tornado.options.parse_command_line()
     app = tornado.web.Application(
         handlers=[
-            (r"/_query/(.+)/(.+)", QueryHandler),
-            (r"/_update/(.+)/(.+)/(.+)", UpdateHandler),
-            (r"/(.+)/(.+)", DefaultHandler),
+            (r"/" + conf.site + r"_query/(.+)/(.+)", QueryHandler),
+            (r"/" + conf.site + r"_update/(.+)/(.+)/(.+)", UpdateHandler),
+            (r"/" + conf.site + r"(.+)/(.+)", DefaultHandler),
         ],
         ui_modules={
             'DataTables': module.datatables.DataTablesModule
