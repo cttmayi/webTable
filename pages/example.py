@@ -22,8 +22,9 @@ def html(p0):
     datatables['id'] = 'itemid' # 唯一 field ID, 用于修改数据
     datatables['order'] = [[ 1, "desc" ]] # 默认的排列(第2列, 降序)
     datatables['number'] = True # 支持第1列自动序列
-    datatables['scrollY'] = 'window.screen.availHeight' # 是否支持垂直scroll(如不支持, 注释即可), 可用javacript代码, 或者数字(600, 800等).
+    datatables['scrollY'] = 'window.screen.height*2/3' # 是否支持垂直scroll(如不支持, 注释即可), 可用javacript代码, 或者数字(600, 800等).
     #datatables['pageLength'] = 25 #  # 是否支持翻页(如不支持, 注释即可), 支持页面数: 10, 25, 50, 100
+    datatables['font-size'] = 10
     datatables['th'] = [] # 用于列描述
     datatables['th'].append(dt.th('ID', 'itemid', "100px")) # 列宽度为100px, 第1个参数为显示名, 第2参数为Key名称.  
     datatables['th'].append(dt.th('PID', 'productid', "200px"))
