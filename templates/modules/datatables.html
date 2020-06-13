@@ -5,6 +5,15 @@
 <table class="display compact hover order-column" style="width:100%" id="t"></table>
 
 <script type="text/javascript">
+    //$.fn.dataTable.ext.buttons.reload = {
+    //    text: '<i class="glyphicon glyphicon-refresh"></i>',
+    //    action: function ( e, dt, node, config ) {
+    //        dt.ajax.reload();
+    //    }
+    //};
+
+
+
     $(document).ready(function () {
         var t = $("#t").dataTable({
             //"iDisplayLength":10,
@@ -14,10 +23,12 @@
                 dataSrc: ''
             },
             scrollY: {{ datatables['scrollY'] }},
-            //dom: 'Bfrtip',
-            //buttons: [
-            //    'excel'
-            //],
+            dom: '<"pull-left"B>ft<"pull-left"i>p', 
+            buttons: [
+                'copy', 'print', 'excel', 'csv', 'pdf'
+            ],
+
+
             {% if 'pageLength' in datatables.keys() %}
             "paging": true,
             "pageLength": {{ datatables['pageLength'] }},
@@ -79,6 +90,8 @@
                 {% end %}
             }
         });
+
+
 
     });
 </script>

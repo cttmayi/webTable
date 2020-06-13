@@ -46,6 +46,8 @@ class DataTablesModule(tornado.web.UIModule):
         return [
             "https://cdn.datatables.net/1.10.15/js/jquery.dataTables.min.js", 
             "https://cdn.bootcss.com/jeditable.js/2.0.13/jquery.jeditable.js",
-            #'https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js',
-            #'https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js',
+            'https://cdn.datatables.net/buttons/1.5.6/js/dataTables.buttons.min.js',
+            'https://cdn.datatables.net/buttons/1.5.6/js/buttons.flash.min.js',
+            'https://cdn.datatables.net/buttons/1.5.6/js/buttons.html5.min.js',
+            'https://cdn.datatables.net/buttons/1.5.6/js/buttons.print.min.js',
         ]
