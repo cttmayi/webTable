@@ -7,7 +7,7 @@ class TestDbFunctions(unittest.TestCase):
         self.db = DbElasticsearch()
         self.db.create('dbtest')
         
-        self.id = 0
+        
         pass
 
     def tearDown(self):
@@ -17,35 +17,45 @@ class TestDbFunctions(unittest.TestCase):
 
         pass
         
+
+    def test_insert_by_id(self):
+        tid = 'DB0000001'
+        id = self.db.insert('dbtest', {'ID': 1}, tid)
+        self.assertEqual(id, tid)
         
-    def test_insert_delete(self):
+
+
+    def test_insert(self):
         id = self.db.insert('dbtest', {'ID': 1})
         ret = self.db.query_id('dbtest', id)
         self.assertEqual(ret['ID'], 1)
         
-        self.db.delete('dbtest', id)
-        ret = self.db.query_id('dbtest', id)
-        self.assertTrue(ret is None)
 
     def test_update(self):
 
-        self.id = self.db.insert('dbtest', {'ID': 1, 'ID2': 2}, self.id)
-        ret = self.db.query_id('dbtest', self.id)
+        id = self.db.insert('dbtest', {'ID': 1, 'ID2': 2})
+        ret = self.db.query_id('dbtest', id)
         self.assertEqual(ret['ID'], 1)
         self.assertEqual(ret['ID2'], 2)        
         
-        ret = self.db.update('dbtest', self.id, {'ID': 2})
-        ret = self.db.query_id('dbtest', self.id)
+        ret = self.db.update('dbtest', id, {'ID': 2})
+        ret = self.db.query_id('dbtest', id)
         self.assertEqual(ret['ID'], 2)
         self.assertEqual(ret['ID2'], 2)
-        
-        self.db.delete('dbtest', self.id)
+
+        ret = self.db.update('dbtest', id, {'ID3': 3})
+        ret = self.db.query_id('dbtest', id)
+        self.assertEqual(ret['ID'], 2)
+        self.assertEqual(ret['ID2'], 2)
+        self.assertEqual(ret['ID3'], 3)
+
 
     def test_delete(self):
-        self.id = self.db.insert('dbtest', {'ID': 1, 'ID2': 2}, self.id)
+        id = self.db.insert('dbtest', {'ID': 1, 'ID2': 2})
         
-        self.assertTrue(self.db.delete('dbtest', self.id))
-        self.assertFalse(self.db.delete('dbtest', self.id))
+        self.assertTrue(self.db.delete('dbtest', id))
+        self.assertFalse(self.db.delete('dbtest', id))
+
 
     def test_query_all(self):
         ret = self.db.query_all('dbtest')
