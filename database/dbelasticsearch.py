@@ -27,12 +27,20 @@ class DbElasticsearch():
             return res[0]
         return None
 
-    def query(self, table_name, cond, from_=0, size=1000):
+    def query(self, table_name, conds, from_=0, size=1000):
         self.es.indices.refresh(index=table_name)
         query_body = {
-            "query" : {"match" : cond}
+            "query" : {
+                "bool": {
+                    "must":[]
+                }
+            }
         }
 
+        for key in conds.keys():
+            cond = conds[key]
+            query_body['query']['bool']['must'].append({'match': {key: cond}})
+        #print(query_body)
         res_list = self.es.search(index=table_name, body=query_body, from_=from_, size=size)[HITS][HITS]
         return self._to_list(res_list)
 

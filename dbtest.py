@@ -75,6 +75,14 @@ class TestDbFunctions(unittest.TestCase):
         ret = self.db.query('dbtest', {'ID2': 3})
         self.assertEqual(len(ret), count + 2)
 
+    def test_query2(self):
+        id = self.db.insert('dbtest', {'ID': 520, 'ID_list': {'ID2': 2, 'ID3': 3}})
+        
+        ret = self.db.query('dbtest', {'ID_list.ID2': 2})
+        
+        self.assertEqual(ret[0]['ID'], 520)
+        
+
     def test_delete_all(self):
         ret = self.db.query_all('dbtest')
         for r in ret:
