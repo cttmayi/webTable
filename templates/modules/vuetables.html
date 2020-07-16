@@ -184,10 +184,10 @@ var Main = {
             axios
             .post(url_update, params)
             .then( function(response){
-                console.log(response)
-                if (response.data == cellValue) {
-                    xTable.reloadRow(row, null, field)
-                }
+                row[field] = response.data
+                // if (response.data == cellValue) {
+                //     xTable.reloadRow(row, cellValue + "A", field)
+                // }
             })
             .catch(function (error) { // 请求失败处理
                 console.log(error);
