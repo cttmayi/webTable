@@ -3,27 +3,13 @@
 
 <div id="app">
     <template>
-        <vxe-toolbar>
-            <template v-slot:buttons>
-                <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索"
-                    @search-click="searchEvent" @clear="searchEvent" @keydown="keyDownEvent"
-                ></vxe-input>
-
-                {% if 'insert' in values['toolbar'] %}
-                <vxe-button icon="fa fa-plus" @click="insertEvent()">添加</vxe-button>
-                {% end %}
-
-                {% if 'delete' in values['toolbar'] %}
-                <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
-                {% end %}
-            </template>
-        </vxe-toolbar>
-  
-        <vxe-table
+        <vxe-grid
             border
+            resizable
             keep-source
             highlight-hover-row
             show-overflow
+            :toolbar="tableToolbar"
             row-id = "{{ values['id'] }}"
             ref = "xTable"
             size = "small"
@@ -37,8 +23,25 @@
             
             @edit-closed = "editClosedEvent"
             @keydown = "keyDownEvent"
-        >
 
+        >
+            <template v-slot:toolbar_buttons>
+                <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索"
+                    @search-click="searchEvent" @clear="searchEvent" @keydown="keyDownEvent"
+                ></vxe-input>
+
+                {% if 'insert' in values['toolbar'] %}
+                <vxe-button icon="fa fa-plus" @click="insertEvent()">添加</vxe-button>
+                {% end %}
+
+                {% if 'delete' in values['toolbar'] %}
+                <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
+                {% end %}
+
+                <!-- <vxe-button @click="$refs.xTable.maximize()">表格最大化</vxe-button>
+                <vxe-button @click="$refs.xTable.revertData()">表格还原</vxe-button>
+                <vxe-button @click="$refs.xTable.zoom()">切换表格最大化/还原</vxe-button> -->
+            </template>
             {% if 'delete' in values['toolbar'] %}
             <vxe-table-column type="checkbox" width="40"></vxe-table-column>
             {% end %}
@@ -49,12 +52,17 @@
                 width = "{{ th['width'] }}"
                 sortable
 
+                {% if th['editor'] == '' %}
+                type = "html"
+                {% end %}
+
                 {% if th['editor'] == 'edit' %}
                 :edit-render="{name: 'input', defaultValue: ''}"
                 {% end %}
                 {% if th['editor'] == 'select' %}
                 :edit-render="{name: 'select', options: {{ th['data'] }} , autoselect: true, events: {input: inputChangeEvent} }"
                 {% end %}
+                
             >
             </vxe-table-column>
             {% end %}
@@ -84,6 +92,16 @@ var Main = {
             tempFilterName: '',
             tableData: [],
             height: {{ values['height'] }},
+
+            tableToolbar: {
+                perfect: true,
+                //refresh: true,
+                zoom: true,
+                custom: true,
+                slots: {
+                  buttons: 'toolbar_buttons'
+                }
+              },
         }
     },
 
@@ -147,7 +165,6 @@ var Main = {
             
         },
         searchEvent(event) {
-            console.log("searchEvent", event)
             this.filterName = this.tempFilterName
         },
         inputChangeEvent(column) {
