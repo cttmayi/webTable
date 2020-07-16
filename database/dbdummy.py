@@ -28,6 +28,7 @@ class DbDummy():
 
 
     def update(self, table_name, id, db_body):
+
         contents = self.__contents__[table_name]
         if id in contents:
             content = contents[id]
@@ -39,7 +40,12 @@ class DbDummy():
 
     def insert(self, table_name, db_body, id=None):
         contents = self.__contents__[table_name]
+
+        if id == None:
+            id = str(len(contents))
+
         contents[id] = db_body
+        return id
 
 
     def delete(self, table_name, id):

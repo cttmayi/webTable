@@ -1,0 +1,217 @@
+{% autoescape None %}
+
+
+<div id="app">
+    <template>
+        <vxe-toolbar>
+            <template v-slot:buttons>
+                <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索"
+                    @search-click="searchEvent" @clear="searchEvent" @keydown="keyDownEvent"
+                ></vxe-input>
+
+                {% if 'insert' in values['toolbar'] %}
+                <vxe-button icon="fa fa-plus" @click="insertEvent()">添加</vxe-button>
+                {% end %}
+
+                {% if 'delete' in values['toolbar'] %}
+                <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
+                {% end %}
+            </template>
+        </vxe-toolbar>
+  
+        <vxe-table
+            border
+            keep-source
+            highlight-hover-row
+            show-overflow
+            row-id = "{{ values['id'] }}"
+            ref = "xTable"
+            size = "small"
+
+            :height = "height"
+            :data = "filterData"
+            :edit-config = "{trigger: 'click', mode: 'cell', icon: 'fa fa-pencil'}"
+            {% if 'order' in values %}
+            :sort-config = "{trigger: 'cell', defaultSort: {{ values['order'] }}, orders: ['desc', 'asc', null]}"
+            {% end %}
+            
+            @edit-closed = "editClosedEvent"
+            @keydown = "keyDownEvent"
+        >
+
+            {% if 'delete' in values['toolbar'] %}
+            <vxe-table-column type="checkbox" width="40"></vxe-table-column>
+            {% end %}
+            <vxe-table-column type="seq" width="60"></vxe-table-column>
+
+            {% for th in values['th'] %}
+            <vxe-table-column field="{{ th['field'] }}" title="{{ th['name'] }}"
+                width = "{{ th['width'] }}"
+                sortable
+
+                {% if th['editor'] == 'edit' %}
+                :edit-render="{name: 'input', defaultValue: ''}"
+                {% end %}
+                {% if th['editor'] == 'select' %}
+                :edit-render="{name: 'select', options: {{ th['data'] }} , autoselect: true, events: {input: inputChangeEvent} }"
+                {% end %}
+            >
+            </vxe-table-column>
+            {% end %}
+
+        </vxe-table>
+    </template>
+</div>
+
+<script type="text/javascript">
+// $(document).ready(function () {
+  // 将全局模态窗口挂载到 vue 实例中
+Vue.prototype.$XModal = VXETable.modal
+
+Vue.prototype.$axios = axios;
+
+var values = {{ values }};
+var url_query = '/{{ conf.site }}_query/{{ name }}/{{ page }}';
+var url_insert = '/{{ conf.site }}_insert/{{ name }}/{{ page }}';
+var url_update = '/{{ conf.site }}_update/{{ name }}/{{ page }}';
+var url_delete = '/{{ conf.site }}_delete/{{ name }}/{{ page }}';
+
+
+var Main = {
+    data() {
+        return {
+            filterName: '',
+            tempFilterName: '',
+            tableData: [],
+            height: {{ values['height'] }},
+        }
+    },
+
+    mounted () {
+        axios
+            .get(url_query)
+            .then(response => (this.tableData = response.data))
+            .catch(function (error) { // 请求失败处理
+                console.log(error);
+            });
+    },
+
+    created () {
+    },
+
+    methods: {
+        insertEvent (row) {
+            let xTable = this.$refs.xTable
+            let tableData = this.tableData
+            axios
+            .get(url_insert)
+            .then(function (response) {
+                //xTable.insertAt(response.data, row)
+                tableData.unshift(response.data)
+            })
+            .catch(function (error) { // 请求失败处理
+                console.log(error);
+            });
+        },
+        removeEvent () {
+            let xTable = this.$refs.xTable
+            const selectRecords = xTable.getCheckboxRecords()
+            if (selectRecords.length) {
+                this.$XModal.confirm('您确定要删除选中的数据吗?').then(type => {
+                    if (type === 'confirm') {
+                        let removeRecords = xTable.getCheckboxRecords()
+
+                        for (i=0; i<removeRecords.length; i++) {
+                            record = removeRecords[i];
+                            const params = new URLSearchParams();
+                            params.append('id', record[values['id']]);
+                            axios.post(url_delete, params)
+                        }
+                        xTable.removeCheckboxRow()
+                    }
+                })
+            } else {
+                this.$XModal.message({ message: '请至少选择一条数据', status: 'error' })
+            }
+        },
+        getInsertEvent () {
+            let insertRecords = this.$refs.xTable.getInsertRecords()
+            this.$XModal.alert(insertRecords.length)
+        },
+        keyDownEvent(event) {
+            let xTable = this.$refs.xTable
+            if (event.$event.key == "Enter") {
+                xTable.clearActived();
+                this.filterName = this.tempFilterName
+            }
+            
+        },
+        searchEvent(event) {
+            console.log("searchEvent", event)
+            this.filterName = this.tempFilterName
+        },
+        inputChangeEvent(column) {
+            let xTable = this.$refs.xTable;
+            xTable.clearActived();
+        },
+        editClosedEvent ({ row, column }) {
+            let xTable = this.$refs.xTable
+            let field = column.property
+            let cellValue = row[field]
+
+            const params = new URLSearchParams();
+            params.append('id', row[values['id']]);
+            params.append('field', field);
+            params.append('value', cellValue);
+
+            axios
+            .post(url_update, params)
+            .then( function(response){
+                console.log(response)
+                if (response.data == cellValue) {
+                    xTable.reloadRow(row, null, field)
+                }
+            })
+            .catch(function (error) { // 请求失败处理
+                console.log(error);
+            });
+        }
+    },
+    computed: {
+        filterData () {
+            const filterName = XEUtils.toString(this.filterName).trim().toLowerCase()
+            if (filterName) {
+                //const filterRE = new RegExp(filterName, 'gi')
+                const searchProps = values['search'];
+                const filters = filterName.split(" ");
+                //const rest = this.tableData.filter(item => searchProps.some(key => XEUtils.toString(item[key]).toLowerCase().indexOf(filterName) > -1))
+                const rest = this.tableData.filter(
+                    function (item) {
+                        for (var index in filters) {
+                            filter = filters[index]
+                            ret = (searchProps.some(key => XEUtils.toString(item[key]).toLowerCase().indexOf(filter) > -1));
+                            if (!ret) {
+                                return false
+                            }
+                        }
+                        return ret;
+                })
+                return rest;
+                // return rest.map(row => {
+                //     const item = Object.assign({}, row)
+                //     searchProps.forEach(key => {
+                //     //item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `<span class="keyword-lighten">${match}</span>`)
+                //         item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `${match}`)
+                //     })
+                //     return item
+                // })
+            }
+            return this.tableData
+        }
+    }
+};
+
+var Ctor = Vue.extend(Main);
+new Ctor().$mount('#app')
+// }
+</script>
