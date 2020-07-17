@@ -13,8 +13,8 @@ import tornado.web
 from tornado.template import Template
 from tornado.escape import json_decode, json_encode
 
-import module.datatables
-import module.vuetables
+import pylib.module.datatables
+import pylib.module.vuetables
 
 from multiprocessing import Process, Queue
 
@@ -126,7 +126,7 @@ if __name__ == "__main__":
         ],
         ui_modules={
             # 'DataTables': module.datatables.DataTablesModule,
-            'VueTables': module.vuetables.VueTablesModule,
+            'VueTables': pylib.module.vuetables.VueTablesModule,
         },
         template_path = os.path.join(os.path.dirname(__file__), "templates"),
         static_path = os.path.join(os.path.dirname(__file__), "static"),

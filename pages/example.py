@@ -1,11 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from database.dbelasticsearch import DbElasticsearch
-from database.dbdummy import DbDummy
+from pylib.database.dbelasticsearch import DbElasticsearch
+from pylib.database.dbdummy import DbDummy
 
 #import module.datatables as dt
-import module.vuetables as dt
+import pylib.module.vuetables as dt
 
 import conf
 
@@ -39,7 +39,6 @@ def html(p0):
 
     #ret['template'] = 'example'
     return ret
-
 
 
 def query(p0):
