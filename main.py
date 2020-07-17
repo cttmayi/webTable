@@ -47,7 +47,7 @@ define("debug", default=conf.debug, help="run on debug mode", type=bool)
 
 class DefaultHandler(tornado.web.RequestHandler):
     def get(self, name, p0):
-        page = __import__('pages.'+name, fromlist=[name])
+        page = pages[name]
         html = page.html(p0)
 
         if 'template' in html.keys() and html['template'] is not None:
@@ -60,14 +60,14 @@ class DefaultHandler(tornado.web.RequestHandler):
 
 class QueryHandler(tornado.web.RequestHandler):
     def get(self, name, p0):
-        page = __import__('pages.'+name, fromlist=[name])
+        page = pages[name]
         out = page.query(p0)
         self.write(json.dumps(out))
 
 
 class UpdateHandler(tornado.web.RequestHandler):
     def post(self, name, p0):
-        page = __import__('pages.'+name, fromlist=[name])
+        page = pages[name]
 
         db_id = self.get_argument('id')
         field = self.get_argument('field')
@@ -80,14 +80,14 @@ class UpdateHandler(tornado.web.RequestHandler):
 
 class InsertHandler(tornado.web.RequestHandler):
     def get(self, name, p0):
-        page = __import__('pages.'+name, fromlist=[name])
+        page = pages[name]
 
         out = page.insert(p0)
         self.write(json.dumps(out))
 
 class DeleteHandler(tornado.web.RequestHandler):
     def post(self, name, p0):
-        page = __import__('pages.'+name, fromlist=[name])
+        page = pages[name]
 
         db_id = self.get_argument('id')
         db_id = page.delete(p0, db_id)
@@ -104,9 +104,14 @@ def _update_process(q):
         page = __import__('pages.'+name, fromlist=[name])
         page.update_thread(p0, db_id, field, value)
 
+pages = {}
+
+def init_page():
+    name = 'example'
+    pages[name] = __import__('pages.'+name, fromlist=[name]).Page()
 
 if __name__ == "__main__":
-
+    init_page()
 
     if conf.queue:
         q = Queue()

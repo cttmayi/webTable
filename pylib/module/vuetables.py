@@ -14,6 +14,10 @@ def th(name, field, width='*', editor='text', data=[]):
         'data': str(list_data)
     }
 
+class VueTables:
+    def __init__(self):
+        pass
+
 
 class VueTablesModule(tornado.web.UIModule):
     def __values(self, values):
