@@ -1,7 +1,7 @@
 {% autoescape None %}
 
 
-<div id="app">
+<div id="{{ values['name'] }}">
     <template>
         <vxe-grid
             border
@@ -26,8 +26,8 @@
 
         >
             <template v-slot:toolbar_buttons>
-                <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索"
-                    @search-click="searchEvent" @clear="searchEvent" @keydown="keyDownEvent"
+                <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索" clearable=false
+                    @search-click="searchEvent" @clear="searchEvent" @keydown="searchEvent"
                 ></vxe-input>
 
                 {% if 'insert' in values['toolbar'] %}
@@ -92,6 +92,7 @@ var Main = {
             tempFilterName: '',
             tableData: [],
             height: {{ values['height'] }},
+            timer: null,
 
             tableToolbar: {
                 perfect: true,
@@ -160,12 +161,17 @@ var Main = {
             let xTable = this.$refs.xTable
             if (event.$event.key == "Enter") {
                 xTable.clearActived();
-                this.filterName = this.tempFilterName
             }
-            
         },
         searchEvent(event) {
+            if (this.timer != null) {
+                clearTimeout(this.timer);
+            }
+            this.timer = setTimeout(this.updateSearch, 300);
+        },
+        updateSearch() {
             this.filterName = this.tempFilterName
+            this.timer = null
         },
         inputChangeEvent(column) {
             let xTable = this.$refs.xTable;
@@ -229,6 +235,6 @@ var Main = {
 };
 
 var Ctor = Vue.extend(Main);
-new Ctor().$mount('#app')
+new Ctor().$mount("#{{ values['name'] }}")
 // }
 </script>

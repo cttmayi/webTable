@@ -21,6 +21,15 @@ class Page(BasePage):
 
     def __init__(self):
         self.db = db
+
+        self.link = {
+            'app': {
+                'query': self.query,
+                'update': self.update,
+                'insert': self.insert,
+                'delete': self.delete,
+            }
+        }
         pass
 
 
@@ -28,6 +37,7 @@ class Page(BasePage):
         ret = {}
 
         vuetables = {}
+        vuetables['name'] = 'app' 
         vuetables['id'] = 'itemid' # 唯一 field ID, 用于修改数据
         vuetables['order'] = {'field': 'itemid', 'order': 'desc'}
         vuetables['toolbar'] = ['insert', 'delete']
@@ -79,14 +89,7 @@ class Page(BasePage):
         return self.db.delete('example', db_id)
 
 
-    # link = {
-    #     'vuetables': {
-    #         'query': query,
-    #         'update': update,
-    #         'insert': insert,
-    #         'delete': delete,
-    #     }
-    # }
+
 
 ##########################################################
 # 范例 Dummy数据库的内容插入
