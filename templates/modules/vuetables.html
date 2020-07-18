@@ -3,6 +3,8 @@
 
 <div id="{{ values['name'] }}">
     <template>
+        <p v-html = 'textData'></p>
+
         <vxe-grid
             border
             resizable
@@ -26,8 +28,10 @@
 
         >
             <template v-slot:toolbar_buttons>
-                <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索" clearable=false
-                    @search-click="searchEvent" @clear="searchEvent" @keydown="searchEvent"
+
+
+                <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索"
+                    @change="searchEvent($event)"
                 ></vxe-input>
 
                 {% if 'insert' in values['toolbar'] %}
@@ -37,6 +41,8 @@
                 {% if 'delete' in values['toolbar'] %}
                 <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
                 {% end %}
+
+
 
             </template>
             {% if 'delete' in values['toolbar'] %}
@@ -84,7 +90,9 @@ var Main = {
         return {
             filterName: '',
             tempFilterName: '',
+            textData:'',
             tableData: [],
+            newData: [],
             height: {{ values['height'] }},
             timer: null,
 
@@ -101,9 +109,14 @@ var Main = {
     },
 
     mounted () {
+        let obj = this;
+
         axios
             .get(url_query)
-            .then(response => (this.tableData = response.data))
+            .then(function (response) {
+                obj.tableData = response.data.data;
+                obj.textData = response.data.text
+            })
             .catch(function (error) { // 请求失败处理
                 console.log(error);
             });
@@ -115,12 +128,13 @@ var Main = {
     methods: {
         insertEvent (row) {
             let xTable = this.$refs.xTable
-            let tableData = this.tableData
+            let obj = this
             axios
             .get(url_insert)
             .then(function (response) {
-                //xTable.insertAt(response.data, row)
-                tableData.unshift(response.data)
+                xTable.insertAt(response.data, row)
+                obj.newData = response.data
+                //tableData.unshift(response.data)
             })
             .catch(function (error) { // 请求失败处理
                 console.log(error);
@@ -147,10 +161,6 @@ var Main = {
                 this.$XModal.message({ message: '请至少选择一条数据', status: 'error' })
             }
         },
-        getInsertEvent () {
-            let insertRecords = this.$refs.xTable.getInsertRecords()
-            this.$XModal.alert(insertRecords.length)
-        },
         keyDownEvent(event) {
             let xTable = this.$refs.xTable
             if (event.$event.key == "Enter") {
@@ -158,14 +168,20 @@ var Main = {
             }
         },
         searchEvent(event) {
+            console.log('searchEvent', event)
             if (this.timer != null) {
                 clearTimeout(this.timer);
             }
             this.timer = setTimeout(this.updateSearch, 300);
         },
         updateSearch() {
+            if (this.newData != null){
+                this.tableData.unshift(this.newData)
+            }
             this.filterName = this.tempFilterName
             this.timer = null
+
+            this.newData = null
         },
         inputChangeEvent(column) {
             let xTable = this.$refs.xTable;
@@ -175,6 +191,7 @@ var Main = {
             let xTable = this.$refs.xTable
             let field = column.property
             let cellValue = row[field]
+            let obj = this
 
             const params = new URLSearchParams();
             params.append('id', row[values['id']]);
@@ -185,6 +202,10 @@ var Main = {
             .post(url_update, params)
             .then( function(response){
                 row[field] = response.data
+
+                if (obj.newData != null){
+                    obj.newData = row;
+                }
             })
             .catch(function (error) { // 请求失败处理
                 console.log(error);
@@ -208,7 +229,7 @@ var Main = {
                         }
                         return ret;
                 })
-                return rest;
+                return rest
             }
             return this.tableData
         }

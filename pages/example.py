@@ -51,7 +51,13 @@ class Page(BasePage):
 
 
     def query(self, p0):
-        ret = self.db.query(DB)
+        data = self.db.query(DB)
+
+        ret = {
+            'text': 'Show data<br>Show data<br><br>Show data',
+            'data': data
+        }
+
         return ret
 
 
@@ -94,6 +100,6 @@ def db_insert(db, id, price):
     }
     id = db.insert('example', data, id)
 
-for i in range(100):
+for i in range(2):
     db_insert(db, 'TV.'+str(i), 1000)
 
