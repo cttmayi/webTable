@@ -20,7 +20,7 @@
             {% if 'order' in values %}
             :sort-config = "{trigger: 'cell', defaultSort: {{ values['order'] }}, orders: ['desc', 'asc', null]}"
             {% end %}
-            
+
             @edit-closed = "editClosedEvent"
             @keydown = "keyDownEvent"
 
@@ -38,9 +38,6 @@
                 <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
                 {% end %}
 
-                <!-- <vxe-button @click="$refs.xTable.maximize()">表格最大化</vxe-button>
-                <vxe-button @click="$refs.xTable.revertData()">表格还原</vxe-button>
-                <vxe-button @click="$refs.xTable.zoom()">切换表格最大化/还原</vxe-button> -->
             </template>
             {% if 'delete' in values['toolbar'] %}
             <vxe-table-column type="checkbox" width="40"></vxe-table-column>
@@ -62,7 +59,6 @@
                 {% if th['editor'] == 'select' %}
                 :edit-render="{name: 'select', options: {{ th['data'] }} , autoselect: true, events: {input: inputChangeEvent} }"
                 {% end %}
-                
             >
             </vxe-table-column>
             {% end %}
@@ -72,7 +68,6 @@
 </div>
 
 <script type="text/javascript">
-// $(document).ready(function () {
   // 将全局模态窗口挂载到 vue 实例中
 Vue.prototype.$XModal = VXETable.modal
 
@@ -83,7 +78,6 @@ var url_query = '/{{ conf.site }}_query/{{ name }}/{{ page }}';
 var url_insert = '/{{ conf.site }}_insert/{{ name }}/{{ page }}';
 var url_update = '/{{ conf.site }}_update/{{ name }}/{{ page }}';
 var url_delete = '/{{ conf.site }}_delete/{{ name }}/{{ page }}';
-
 
 var Main = {
     data() {
@@ -191,9 +185,6 @@ var Main = {
             .post(url_update, params)
             .then( function(response){
                 row[field] = response.data
-                // if (response.data == cellValue) {
-                //     xTable.reloadRow(row, cellValue + "A", field)
-                // }
             })
             .catch(function (error) { // 请求失败处理
                 console.log(error);
@@ -204,10 +195,8 @@ var Main = {
         filterData () {
             const filterName = XEUtils.toString(this.filterName).trim().toLowerCase()
             if (filterName) {
-                //const filterRE = new RegExp(filterName, 'gi')
                 const searchProps = values['search'];
                 const filters = filterName.split(" ");
-                //const rest = this.tableData.filter(item => searchProps.some(key => XEUtils.toString(item[key]).toLowerCase().indexOf(filterName) > -1))
                 const rest = this.tableData.filter(
                     function (item) {
                         for (var index in filters) {
@@ -220,14 +209,6 @@ var Main = {
                         return ret;
                 })
                 return rest;
-                // return rest.map(row => {
-                //     const item = Object.assign({}, row)
-                //     searchProps.forEach(key => {
-                //     //item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `<span class="keyword-lighten">${match}</span>`)
-                //         item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `${match}`)
-                //     })
-                //     return item
-                // })
             }
             return this.tableData
         }

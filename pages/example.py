@@ -3,7 +3,7 @@
 
 from pylib.page.basepage import BasePage
 
-from pylib.database.dbelasticsearch import DbElasticsearch
+# from pylib.database.dbelasticsearch import DbElasticsearch
 from pylib.database.dbdummy import DbDummy
 
 #import module.datatables as dt
@@ -21,15 +21,6 @@ class Page(BasePage):
 
     def __init__(self):
         self.db = db
-
-        self.link = {
-            'app': {
-                'query': self.query,
-                'update': self.update,
-                'insert': self.insert,
-                'delete': self.delete,
-            }
-        }
         pass
 
 
@@ -87,8 +78,6 @@ class Page(BasePage):
 
     def delete(self, p0, db_id):
         return self.db.delete('example', db_id)
-
-
 
 
 ##########################################################
