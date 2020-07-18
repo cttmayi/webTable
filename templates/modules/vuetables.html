@@ -28,8 +28,6 @@
 
         >
             <template v-slot:toolbar_buttons>
-
-
                 <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索"
                     @change="searchEvent($event)"
                 ></vxe-input>
@@ -92,7 +90,7 @@ var Main = {
             tempFilterName: '',
             textData:'',
             tableData: [],
-            newData: [],
+            newData: null,
             height: {{ values['height'] }},
             timer: null,
 
@@ -132,6 +130,9 @@ var Main = {
             axios
             .get(url_insert)
             .then(function (response) {
+                if (this.newData != null){
+                    this.tableData.unshift(this.newData)
+                }
                 xTable.insertAt(response.data, row)
                 obj.newData = response.data
                 //tableData.unshift(response.data)
@@ -146,6 +147,10 @@ var Main = {
             if (selectRecords.length) {
                 this.$XModal.confirm('您确定要删除选中的数据吗?').then(type => {
                     if (type === 'confirm') {
+                        if (this.newData != null){
+                            this.tableData.unshift(this.newData)
+                        }
+
                         let removeRecords = xTable.getCheckboxRecords()
 
                         for (i=0; i<removeRecords.length; i++) {
