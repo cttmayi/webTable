@@ -78,10 +78,10 @@ Vue.prototype.$XModal = VXETable.modal
 Vue.prototype.$axios = axios;
 
 var values = {{ values }};
-var url_query = '/{{ conf.site }}_query/{{ name }}/{{ page }}';
-var url_insert = '/{{ conf.site }}_insert/{{ name }}/{{ page }}';
-var url_update = '/{{ conf.site }}_update/{{ name }}/{{ page }}';
-var url_delete = '/{{ conf.site }}_delete/{{ name }}/{{ page }}';
+var url_query = '/{{ conf.site }}_query/{{ name }}/{{ p0 }}/{{ p1 }}';
+var url_insert = '/{{ conf.site }}_insert/{{ name }}/{{ p0 }}/{{ p1 }}';
+var url_update = '/{{ conf.site }}_update/{{ name }}/{{ p0 }}/{{ p1 }}';
+var url_delete = '/{{ conf.site }}_delete/{{ name }}/{{ p0 }}/{{ p1 }}';
 
 var Main = {
     data() {

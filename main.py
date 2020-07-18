@@ -46,7 +46,7 @@ define("debug", default=conf.debug, help="run on debug mode", type=bool)
 
 
 class DefaultHandler(tornado.web.RequestHandler):
-    def get(self, name, p0):
+    def get(self, name, p0='_', p1='_'):
         page = pages[name]
         html = page.html(p0)
 
@@ -55,42 +55,42 @@ class DefaultHandler(tornado.web.RequestHandler):
         else:
             template = 'default.html'
 
-        self.render(template, name=name, p0=p0, html=html)
+        self.render(template, name=name, p0=p0, p1=p1, html=html)
 
 
 class QueryHandler(tornado.web.RequestHandler):
-    def get(self, name, p0):
+    def get(self, name, p0, p1):
         page = pages[name]
-        out = page.query(p0)
+        out = page.query(p0, p1)
         self.write(json.dumps(out))
 
 
 class UpdateHandler(tornado.web.RequestHandler):
-    def post(self, name, p0):
+    def post(self, name, p0, p1):
         page = pages[name]
 
         db_id = self.get_argument('id')
         field = self.get_argument('field')
         value = self.get_argument('value')
 
-        is_ok = page.update(p0, db_id, field, value)
+        is_ok = page.update(p0, p1, db_id, field, value)
         if is_ok:
             self.write(value)
 
 
 class InsertHandler(tornado.web.RequestHandler):
-    def get(self, name, p0):
+    def get(self, name, p0, p1):
         page = pages[name]
 
-        out = page.insert(p0)
+        out = page.insert(p0, p1)
         self.write(json.dumps(out))
 
 class DeleteHandler(tornado.web.RequestHandler):
-    def post(self, name, p0):
+    def post(self, name, p0, p1):
         page = pages[name]
 
         db_id = self.get_argument('id')
-        db_id = page.delete(p0, db_id)
+        db_id = page.delete(p0, p1, db_id)
 
         self.write(str(db_id))
 
@@ -99,10 +99,10 @@ def _update_process(q):
     # print('update_process ready!')
     while True:
         #if not q.empty():
-        name, p0, db_id, field, value = q.get(True)
-        print('q:', name, p0, db_id, field, value)
+        name, p0, p1, db_id, field, value = q.get(True)
+        print('q:', name, p0, p1, db_id, field, value)
         page = __import__('pages.'+name, fromlist=[name])
-        page.update_thread(p0, db_id, field, value)
+        page.update_thread(p0, p1, db_id, field, value)
 
 pages = {}
 
@@ -123,11 +123,13 @@ if __name__ == "__main__":
     tornado.options.parse_command_line()
     app = tornado.web.Application(
         handlers=[
-            (r"/" + conf.site + r"_query/(.+)/(.+)", QueryHandler),
-            (r"/" + conf.site + r"_update/(.+)/(.+)", UpdateHandler),
-            (r"/" + conf.site + r"_insert/(.+)/(.+)", InsertHandler),
-            (r"/" + conf.site + r"_delete/(.+)/(.+)", DeleteHandler),
+            (r"/" + conf.site + r"_query/(.+)/(.+)/(.+)", QueryHandler),
+            (r"/" + conf.site + r"_update/(.+)/(.+)/(.+)", UpdateHandler),
+            (r"/" + conf.site + r"_insert/(.+)/(.+)/(.+)", InsertHandler),
+            (r"/" + conf.site + r"_delete/(.+)/(.+)/(.+)", DeleteHandler),
+            (r"/" + conf.site + r"(.+)/(.+)/(.+)", DefaultHandler),
             (r"/" + conf.site + r"(.+)/(.+)", DefaultHandler),
+            (r"/" + conf.site + r"(.+)", DefaultHandler),
         ],
         ui_modules={
             # 'DataTables': module.datatables.DataTablesModule,

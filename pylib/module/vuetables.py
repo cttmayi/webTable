@@ -23,11 +23,12 @@ class VueTablesModule(tornado.web.UIModule):
     def __values(self, values):
         return values
 
-    def render(self, name, page, values):
+    def render(self, name, p0, p1, values):
         return self.render_string(
             "modules/vuetables.html",
             name = name,
-            page = page,
+            p0 = p0,
+            p1 = p1,
             values = self.__values(values),
             conf = conf,
         )

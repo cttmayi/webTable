@@ -50,7 +50,7 @@ class Page(BasePage):
         return ret
 
 
-    def query(self, p0):
+    def query(self, p0, p1):
         data = self.db.query(DB)
 
         ret = {
@@ -61,7 +61,7 @@ class Page(BasePage):
         return ret
 
 
-    def update_thread(self, p0, db_id, field, value):
+    def update_thread(self, p0, p1, db_id, field, value):
         print('update_thread', p0, db_id, field, value)
         body = {
             field: value
@@ -69,20 +69,20 @@ class Page(BasePage):
         self.db.update(DB, db_id, body)
 
 
-    def update(self, p0, db_id, field, value):
+    def update(self, p0, p1, db_id, field, value):
         #conf.queue.put(('example', p0, db_id, field, value))
         self.update_thread(p0, db_id, field, value)
         return True
 
 
-    def insert(self, p0):
+    def insert(self, p0, p1):
         data = {'productid': 'N'}
         db_id = self.db.insert('example', data)
         data['itemid'] = str(db_id)
         return data
 
 
-    def delete(self, p0, db_id):
+    def delete(self, p0, p1, db_id):
         return self.db.delete('example', db_id)
 
 
