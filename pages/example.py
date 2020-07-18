@@ -30,9 +30,9 @@ class Page(BasePage):
         vuetables = {}
         vuetables['name'] = 'app' 
         vuetables['id'] = 'itemid' # 唯一 field ID, 用于修改数据
-        vuetables['order'] = {'field': 'itemid', 'order': 'desc'}
+        vuetables['order'] = {'field': 'itemid', 'order': 'desc'} # 排序，asc/desc
         vuetables['toolbar'] = ['insert', 'delete']
-        vuetables['search'] = ['itemid', 'listprice', 'unitcost']
+        vuetables['search'] = ['itemid', 'listprice', 'unitcost'] # 搜索范围
         # vuetables['number'] = True # 支持第1列自动序列
         vuetables['height'] = 'window.screen.height*2/3' # 是否支持垂直scroll(如不支持, 注释即可), 可用javacript代码, 或者数字(600, 800等).
         vuetables['th'] = [] # 用于列描述
