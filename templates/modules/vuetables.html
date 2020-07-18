@@ -198,23 +198,25 @@ var Main = {
             let cellValue = row[field]
             let obj = this
 
-            const params = new URLSearchParams();
-            params.append('id', row[values['id']]);
-            params.append('field', field);
-            params.append('value', cellValue);
+            if (cellValue != null) {
+                const params = new URLSearchParams();
+                params.append('id', row[values['id']]);
+                params.append('field', field);
+                params.append('value', cellValue);
 
-            axios
-            .post(url_update, params)
-            .then( function(response){
-                row[field] = response.data
+                axios
+                .post(url_update, params)
+                .then( function(response){
+                    row[field] = response.data
 
-                if (obj.newData != null){
-                    obj.newData = row;
-                }
-            })
-            .catch(function (error) { // 请求失败处理
-                console.log(error);
-            });
+                    if (obj.newData != null){
+                        obj.newData = row;
+                    }
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error);
+                });
+            }
         }
     },
     computed: {
