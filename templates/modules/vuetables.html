@@ -3,7 +3,7 @@
 
 <div id="{{ values['name'] }}">
     <template>
-        <p v-html = 'textData'></p>
+        <p font-size=1rem v-html = 'textData'></p>
 
         <vxe-grid
             border
@@ -53,7 +53,7 @@
                 width = "{{ th['width'] }}"
                 sortable
 
-                {% if th['editor'] == '' %}
+                {% if th['editor'] == 'text' %}
                 type = "html"
                 {% end %}
 
