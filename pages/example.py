@@ -60,7 +60,7 @@ def query(p0, p1):
 
 
 def update_thread(p0, p1, db_id, field, value):
-    print('update_thread', p0, db_id, field, value)
+    print('update_thread', p0, p1, db_id, field, value)
     body = {
         field: value
     }
@@ -68,8 +68,8 @@ def update_thread(p0, p1, db_id, field, value):
 
 
 def update(p0, p1, db_id, field, value):
-    #conf.queue.put(('example', p0, db_id, field, value))
-    self.update_thread(p0, db_id, field, value)
+    #conf.queue.put(('example', p0, p1, db_id, field, value))
+    update_thread(p0, p1, db_id, field, value)
     return True
 
 
