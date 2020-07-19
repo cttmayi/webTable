@@ -26,7 +26,7 @@
             :toolbar="tableToolbar"
             row-id = "{{ values['id'] }}"
             ref = "xTable"
-            size = "small"
+            size = "mini"
 
             :height = "height"
             :data = "filterData"
@@ -52,7 +52,9 @@
                 <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
                 {% end %}
 
-
+                {% if 'computed' in values %}
+                <vxe-input :value='textToolbarData' editable=false size = "mini" readonly=true></vxe-input>
+                {% end %}
 
             </template>
             {% if 'delete' in values['toolbar'] %}
@@ -102,6 +104,7 @@ var Main = {
             tempFilterName: '',
             textData:'',
             tableData: [],
+            textToolbarData: 'TEXT',
             newData: null,
             height: {{ values['height'] }},
             timer: null,
@@ -229,7 +232,25 @@ var Main = {
                     console.log(error);
                 });
             }
+        },
+        getTextToolbarData(data) {
+            try {
+                sum = 0
+                for (i=0; i<data.length; i++) {
+                    r = data[i]
+                    field = values['computed']['field']
+                    if (field in r && r[field] != '') {
+                        s = parseFloat(r[field])
+                        sum = sum + s
+                    }
+                }
+                this.textToolbarData = values['computed']['name'] + sum.toString()
+            }
+            catch (err) {
+                this.textToolbarData = ''
+            }
         }
+
     },
     computed: {
         filterData () {
@@ -248,8 +269,12 @@ var Main = {
                         }
                         return ret;
                 })
+
+
+                this.getTextToolbarData(rest)
                 return rest
             }
+            this.getTextToolbarData(this.tableData)
             return this.tableData
         }
     }

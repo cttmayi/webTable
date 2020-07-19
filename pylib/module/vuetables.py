@@ -24,6 +24,9 @@ class VueTablesModule(tornado.web.UIModule):
         if 'name' not in values:
             values['name'] = 'app' 
 
+        if 'computed' in values:
+            if 'name' not in values['computed']:
+                values['computed']['name'] = ''
 
         return values
 

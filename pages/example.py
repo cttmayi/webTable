@@ -41,6 +41,8 @@ def html(p0, p1):
         'font-size': '10px' 
     }
 
+    vuetables['computed'] = {'name': 'SUM(COST)=', 'field': 'unitcost', 'method': 'float'}
+
     ret['title'] = 'Web' # Web 标题
     ret['vuetables'] = vuetables
 
