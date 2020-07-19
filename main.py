@@ -47,7 +47,7 @@ define("debug", default=conf.debug, help="run on debug mode", type=bool)
 
 class DefaultHandler(tornado.web.RequestHandler):
     def get(self, name, p0='_', p1='_'):
-        page = pages[name]
+        page = load_page(name)
         html = page.html(p0, p1)
 
         if 'template' in html.keys() and html['template'] is not None:
@@ -60,14 +60,14 @@ class DefaultHandler(tornado.web.RequestHandler):
 
 class QueryHandler(tornado.web.RequestHandler):
     def get(self, name, p0, p1):
-        page = pages[name]
+        page = load_page(name)
         out = page.query(p0, p1)
         self.write(json.dumps(out))
 
 
 class UpdateHandler(tornado.web.RequestHandler):
     def post(self, name, p0, p1):
-        page = pages[name]
+        page = load_page(name)
 
         db_id = self.get_argument('id')
         field = self.get_argument('field')
@@ -80,14 +80,14 @@ class UpdateHandler(tornado.web.RequestHandler):
 
 class InsertHandler(tornado.web.RequestHandler):
     def get(self, name, p0, p1):
-        page = pages[name]
+        page = load_page(name)
 
         out = page.insert(p0, p1)
         self.write(json.dumps(out))
 
 class DeleteHandler(tornado.web.RequestHandler):
     def post(self, name, p0, p1):
-        page = pages[name]
+        page = load_page(name)
 
         db_id = self.get_argument('id')
         db_id = page.delete(p0, p1, db_id)
@@ -101,17 +101,17 @@ def _update_process(q):
         #if not q.empty():
         name, p0, p1, db_id, field, value = q.get(True)
         print('q:', name, p0, p1, db_id, field, value)
-        page = __import__('pages.'+name, fromlist=[name])
+        page = load_page(name)
         page.update_thread(p0, p1, db_id, field, value)
 
 pages = {}
 
-def init_page():
-    name = 'example'
-    pages[name] = __import__('pages.'+name, fromlist=[name])
+def load_page(name):
+    if name not in pages:
+        pages[name] = __import__('pages.'+name, fromlist=[name])
+    return pages[name]
 
 if __name__ == "__main__":
-    init_page()
 
     if conf.queue:
         q = Queue()
