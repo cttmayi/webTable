@@ -48,7 +48,7 @@ define("debug", default=conf.debug, help="run on debug mode", type=bool)
 class DefaultHandler(tornado.web.RequestHandler):
     def get(self, name, p0='_', p1='_'):
         page = pages[name]
-        html = page.html(p0)
+        html = page.html(p0, p1)
 
         if 'template' in html.keys() and html['template'] is not None:
             template = html['template'] + '.html'
@@ -108,7 +108,7 @@ pages = {}
 
 def init_page():
     name = 'example'
-    pages[name] = __import__('pages.'+name, fromlist=[name]).Page()
+    pages[name] = __import__('pages.'+name, fromlist=[name])
 
 if __name__ == "__main__":
     init_page()
