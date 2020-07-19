@@ -21,7 +21,7 @@ def html(p0, p1):
     ret = {}
 
     vuetables = {}
-    vuetables['name'] = 'app' 
+    # vuetables['name'] = 'app' 
     vuetables['id'] = 'itemid' # 唯一 field ID, 用于修改数据
     vuetables['order'] = {'field': 'itemid', 'order': 'desc'} # 排序，asc/desc
     vuetables['toolbar'] = ['insert', 'delete']

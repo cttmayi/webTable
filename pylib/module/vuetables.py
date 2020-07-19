@@ -21,6 +21,10 @@ class VueTables:
 
 class VueTablesModule(tornado.web.UIModule):
     def __values(self, values):
+        if 'name' not in values:
+            values['name'] = 'app' 
+
+
         return values
 
     def render(self, name, p0, p1, values):
