@@ -3,7 +3,19 @@
 
 <div id="{{ values['name'] }}">
     <template>
-        <p font-size=1rem v-html = 'textData'></p>
+
+        {% if 'summary' in values %}
+        <p style="width:100%; overflow:scroll; overflow-x:hidden;
+            {% if 'height' in values['summary'] %}
+            height: {{ values['summary']['height'] }};
+            {% end %}
+            {% if 'font-size' in values['summary'] %}
+            font-size: {{ values['summary']['font-size'] }}
+            {% end %}
+            "
+            v-html = 'textData'
+        ></p>
+        {% end %}
 
         <vxe-grid
             border

@@ -36,6 +36,11 @@ def html(p0, p1):
     vuetables['th'].append(dt.th('Attr', 'attr1', "200px"))
     vuetables['th'].append(dt.th('Status', 'status'))
 
+    vuetables['summary'] = { 
+        'height': '100px', 
+        'font-size': '10px' 
+    }
+
     ret['title'] = 'Web' # Web 标题
     ret['vuetables'] = vuetables
 
@@ -47,7 +52,7 @@ def query(p0, p1):
     data = db.query(DB)
 
     ret = {
-        'text': 'Show data<br>Show data<br><br>Show data',
+        'text': '<br>'.join(['Show data']*10),
         'data': data
     }
 
