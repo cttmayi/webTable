@@ -67,12 +67,12 @@ def update_thread(p0, p1, db_id, field, value):
         field: value
     }
     db.update(DB, db_id, body)
-    return value
+
 
 
 def update(p0, p1, db_id, field, value):
     #conf.queue.put(('example', p0, p1, db_id, field, value))
-    value = update_thread(p0, p1, db_id, field, value)
+    update_thread(p0, p1, db_id, field, value)
     return value
 
 
