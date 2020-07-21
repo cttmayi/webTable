@@ -230,14 +230,17 @@ var Main = {
             }
         },
         getTextToolbarData(data) {
+            console.log(data)
             try {
                 sum = 0
                 for (i=0; i<data.length; i++) {
                     r = data[i]
-                    field = values['computed']['field']
-                    if (field in r && r[field] != '') {
-                        s = parseFloat(r[field])
-                        sum = sum + s
+                    if (r != null) {
+                        field = values['computed']['field']
+                        if (field in r && r[field] != '') {
+                            s = parseFloat(r[field])
+                            sum = sum + s
+                        }
                     }
                 }
                 this.textToolbarData = values['computed']['name'] + sum.toString()
@@ -267,10 +270,10 @@ var Main = {
                 })
 
 
-                this.getTextToolbarData(rest)
+                this.getTextToolbarData(rest.concat([this.newData]))
                 return rest
             }
-            this.getTextToolbarData(this.tableData)
+            this.getTextToolbarData(this.tableData.concat([this.newData]))
             return this.tableData
         }
     }
