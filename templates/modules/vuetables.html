@@ -85,9 +85,7 @@
 </div>
 
 <script type="text/javascript">
-  // 将全局模态窗口挂载到 vue 实例中
 Vue.prototype.$XModal = VXETable.modal
-
 Vue.prototype.$axios = axios;
 
 var values = {{ values }};
@@ -149,7 +147,6 @@ var Main = {
                 }
                 xTable.insertAt(response.data, row)
                 obj.newData = response.data
-                //tableData.unshift(response.data)
             })
             .catch(function (error) { // 请求失败处理
                 console.log(error);
@@ -281,5 +278,5 @@ var Main = {
 
 var Ctor = Vue.extend(Main);
 new Ctor().$mount("#{{ values['name'] }}")
-// }
+
 </script>
