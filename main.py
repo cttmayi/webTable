@@ -73,9 +73,9 @@ class UpdateHandler(tornado.web.RequestHandler):
         field = self.get_argument('field')
         value = self.get_argument('value')
 
-        is_ok = page.update(p0, p1, db_id, field, value)
-        if is_ok:
-            self.write(value)
+        value = page.update(p0, p1, db_id, field, value)
+
+        self.write(value)
 
 
 class InsertHandler(tornado.web.RequestHandler):
