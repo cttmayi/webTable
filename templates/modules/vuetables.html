@@ -40,9 +40,13 @@
 
         >
             <template v-slot:toolbar_buttons>
-                <vxe-input v-model="tempFilterName" type="search" placeholder="全表搜索"
+                <vxe-input v-model="tempFilterName" type="search" placeholder="搜索"
                     @change="searchEvent($event)"
                 ></vxe-input>
+
+                {% if 'computed' in values %}
+                <vxe-input :value='textToolbarData' editable=false size = "mini" readonly=true></vxe-input>
+                {% end %}
 
                 {% if 'insert' in values['toolbar'] %}
                 <vxe-button icon="fa fa-plus" @click="insertEvent()">添加</vxe-button>
@@ -52,9 +56,7 @@
                 <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
                 {% end %}
 
-                {% if 'computed' in values %}
-                <vxe-input :value='textToolbarData' editable=false size = "mini" readonly=true></vxe-input>
-                {% end %}
+
 
             </template>
             {% if 'delete' in values['toolbar'] %}
