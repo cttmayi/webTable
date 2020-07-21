@@ -24,7 +24,7 @@ def html(p0, p1):
     # vuetables['name'] = 'app' 
     vuetables['id'] = 'itemid' # 唯一 field ID, 用于修改数据
     vuetables['order'] = {'field': 'itemid', 'order': 'desc'} # 排序，asc/desc
-    vuetables['toolbar'] = ['insert', 'delete']
+    vuetables['toolbar'] = ['insert', 'delete'] # 配置 Toolbar 按钮
     vuetables['search'] = ['itemid', 'listprice', 'unitcost'] # 搜索范围
     # vuetables['number'] = True # 支持第1列自动序列
     vuetables['height'] = 'window.screen.height*2/3' # 是否支持垂直scroll(如不支持, 注释即可), 可用javacript代码, 或者数字(600, 800等).

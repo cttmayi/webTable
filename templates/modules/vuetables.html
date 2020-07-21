@@ -37,7 +37,6 @@
 
             @edit-closed = "editClosedEvent"
             @keydown = "keyDownEvent"
-
         >
             <template v-slot:toolbar_buttons>
                 <vxe-input v-model="tempFilterName" type="search" placeholder="搜索"
@@ -55,8 +54,6 @@
                 {% if 'delete' in values['toolbar'] %}
                 <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
                 {% end %}
-
-
 
             </template>
             {% if 'delete' in values['toolbar'] %}
