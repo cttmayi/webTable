@@ -2,7 +2,30 @@
 
 
 <div id="{{ values['name'] }}">
+
     <template>
+
+    <vxe-modal v-model="insertDialog" title="添加" width="600" height=auto resize remember>
+    <vxe-form :data='dialogValue' title-align="right" title-width="60" @submit="submitDialogEvent" >
+    {% for th in values['th'] %}
+    {% if th['editor'] != 'text' %}
+        <vxe-form-item title="{{ th['name'] }}" field="{{ th['field'] }}" span="24" reset-value=""
+
+        {% if th['editor'] == 'edit' %}
+        :item-render="{name: 'input', defaultValue: ''}"
+        {% end %}
+        {% if th['editor'] == 'select' %}
+        :item-render="{name: 'select', options: {{ th['data'] }} }"
+        {% end %}            
+        ></vxe-form-item>
+    {% end %}
+    {% end %}
+
+        <vxe-form-item align="center" span="24">
+        <vxe-button type="submit" status="primary">提交</vxe-button>
+        </vxe-form-item>
+    </vxe-form>
+    </vxe-modal>
 
         {% if 'summary' in values %}
         <p style="width:100%; overflow:scroll; overflow-x:hidden;
@@ -27,15 +50,15 @@
             row-id = "{{ values['id'] }}"
             ref = "xTable"
             size = "mini"
+            height = "{{ values['height'] }}"
 
-            :height = "height"
             :data = "filterData"
             :edit-config = "{trigger: 'click', mode: 'cell', icon: 'fa fa-pencil'}"
             {% if 'order' in values %}
             :sort-config = "{trigger: 'cell', defaultSort: {{ values['order'] }}, orders: ['desc', 'asc', null]}"
             {% end %}
 
-            @edit-closed = "editClosedEvent"
+            @edit-closed = "updateEvent"
             @keydown = "keyDownEvent"
         >
             <template v-slot:toolbar_buttons>
@@ -46,20 +69,18 @@
                 {% if 'computed' in values %}
                 <vxe-input :value='textToolbarData' editable=false size = "mini" readonly=true></vxe-input>
                 {% end %}
-
                 {% if 'insert' in values['toolbar'] %}
                 <vxe-button icon="fa fa-plus" @click="insertEvent()">添加</vxe-button>
                 {% end %}
-
                 {% if 'delete' in values['toolbar'] %}
                 <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
                 {% end %}
 
             </template>
             {% if 'delete' in values['toolbar'] %}
-            <vxe-table-column type="checkbox" width="40"></vxe-table-column>
+            <vxe-table-column type="checkbox" width="30"></vxe-table-column>
             {% end %}
-            <vxe-table-column type="seq" width="60"></vxe-table-column>
+            <vxe-table-column type="seq" width="40"></vxe-table-column>
 
             {% for th in values['th'] %}
             <vxe-table-column field="{{ th['field'] }}" title="{{ th['name'] }}"
@@ -69,7 +90,6 @@
                 {% if th['editor'] == 'text' %}
                 type = "html"
                 {% end %}
-
                 {% if th['editor'] == 'edit' %}
                 :edit-render="{name: 'input', defaultValue: ''}"
                 {% end %}
@@ -101,10 +121,13 @@ var Main = {
             tempFilterName: '',
             textData:'',
             tableData: [],
-            textToolbarData: 'TEXT',
-            newData: null,
-            height: {{ values['height'] }},
+            textToolbarData: '',
+
             timer: null,
+            loadTimer: null,
+
+            insertDialog: false,
+            dialogValue: {},
 
             tableToolbar: {
                 perfect: true,
@@ -119,48 +142,40 @@ var Main = {
     },
 
     mounted () {
-        let obj = this;
-
-        axios
-            .get(url_query)
-            .then(function (response) {
-                obj.tableData = response.data.data;
-                obj.textData = response.data.text
-            })
-            .catch(function (error) { // 请求失败处理
-                console.log(error);
-            });
+        this.loadData()
     },
 
     created () {
     },
 
     methods: {
-        insertEvent (row) {
-            let xTable = this.$refs.xTable
-            let obj = this
+        loadData() {
+            console.log('loadData')
+            let obj = this;
+
             axios
-            .get(url_insert)
-            .then(function (response) {
-                if (this.newData != null){
-                    this.tableData.unshift(this.newData)
-                }
-                xTable.insertAt(response.data, row)
-                obj.newData = response.data
-            })
-            .catch(function (error) { // 请求失败处理
-                console.log(error);
-            });
+                .get(url_query)
+                .then(function (response) {
+                    obj.tableData = response.data.data;
+                    obj.textData = response.data.text
+                })
+                .catch(function (error) { // 请求失败处理
+                    console.log(error);
+                });
+            this.loadTimer = null
         },
+
+        insertEvent (row) {
+            this.insertDialog = true
+        },
+
         removeEvent () {
             let xTable = this.$refs.xTable
+            let obj = this
             const selectRecords = xTable.getCheckboxRecords()
             if (selectRecords.length) {
                 this.$XModal.confirm('您确定要删除选中的数据吗?').then(type => {
                     if (type === 'confirm') {
-                        if (this.newData != null){
-                            this.tableData.unshift(this.newData)
-                        }
 
                         let removeRecords = xTable.getCheckboxRecords()
 
@@ -168,7 +183,16 @@ var Main = {
                             record = removeRecords[i];
                             const params = new URLSearchParams();
                             params.append('id', record[values['id']]);
-                            axios.post(url_delete, params)
+                            axios
+                            .post(url_delete, params)
+                            .then(function (response) {
+
+                                if (this.loadTimer != null) {
+                                    clearTimeout(this.loadTimer);
+                                }
+                                this.loadTimer = setTimeout(obj.loadData, 100);
+                            })
+
                         }
                         xTable.removeCheckboxRow()
                     }
@@ -177,33 +201,8 @@ var Main = {
                 this.$XModal.message({ message: '请至少选择一条数据', status: 'error' })
             }
         },
-        keyDownEvent(event) {
-            let xTable = this.$refs.xTable
-            if (event.$event.key == "Enter") {
-                xTable.clearActived();
-            }
-        },
-        searchEvent(event) {
-            console.log('searchEvent', event)
-            if (this.timer != null) {
-                clearTimeout(this.timer);
-            }
-            this.timer = setTimeout(this.updateSearch, 300);
-        },
-        updateSearch() {
-            if (this.newData != null){
-                this.tableData.unshift(this.newData)
-            }
-            this.filterName = this.tempFilterName
-            this.timer = null
 
-            this.newData = null
-        },
-        inputChangeEvent(column) {
-            let xTable = this.$refs.xTable;
-            xTable.clearActived();
-        },
-        editClosedEvent ({ row, column }) {
+        updateEvent ({ row, column }) {
             let xTable = this.$refs.xTable
             let field = column.property
             let cellValue = row[field]
@@ -220,8 +219,9 @@ var Main = {
                 .then( function(response){
                     row[field] = response.data
 
-                    if (obj.newData != null){
-                        obj.newData = row;
+                    for (i=0; i<obj.tableData.length; i++){
+                        if (obj.tableData[i][values['id']] == row[values['id']])
+                            obj.tableData[i] = row;
                     }
                 })
                 .catch(function (error) { // 请求失败处理
@@ -229,8 +229,67 @@ var Main = {
                 });
             }
         },
+
+        submitDialogEvent(data, event){
+            let obj = this
+            axios
+            .get(url_insert)
+            .then(function (response) {
+                var value = {}
+
+                for (var key in response.data) {
+                    value[key] = response.data[key];
+                }
+
+                let id = value['{{ values['id'] }}']
+                let params
+                {% for th in values['th'] %}
+                    field = "{{ th['field'] }}"
+                    
+                {% if th['editor'] != 'text' %}
+                if (field in data.data) {
+                    value[field] = data.data[field]
+                    params = new URLSearchParams();
+                    params.append('id', id);
+                    params.append('field', field );
+                    params.append('value', value[field]);
+                    axios.post(url_update, params)
+                }
+
+                {% end %}
+                {% end %}
+
+                obj.insertDialog = false
+                obj.tableData.unshift(value)
+
+            })
+        },
+
+        keyDownEvent(event) {
+            let xTable = this.$refs.xTable
+            if (event.$event.key == "Enter") {
+                xTable.clearActived();
+            }
+        },
+
+        searchEvent(event) {
+            if (this.timer != null) {
+                clearTimeout(this.timer);
+            }
+            this.timer = setTimeout(this.updateSearch, 200);
+        },
+
+        updateSearch() {
+            this.filterName = this.tempFilterName
+            this.timer = null
+        },
+
+        inputChangeEvent(column) {
+            let xTable = this.$refs.xTable;
+            xTable.clearActived();
+        },
+
         getTextToolbarData(data) {
-            console.log(data)
             try {
                 sum = 0
                 for (i=0; i<data.length; i++) {
@@ -269,11 +328,10 @@ var Main = {
                         return ret;
                 })
 
-
-                this.getTextToolbarData(rest.concat([this.newData]))
+                this.getTextToolbarData(rest)
                 return rest
             }
-            this.getTextToolbarData(this.tableData.concat([this.newData]))
+            this.getTextToolbarData(this.tableData)
             return this.tableData
         }
     }

@@ -77,9 +77,11 @@ def update(p0, p1, db_id, field, value):
 
 
 def insert(p0, p1):
-    data = {'productid': 'N'}
-    db_id = db.insert('example', data)
-    data['itemid'] = str(db_id)
+    data = {'productid': 'NTV'}
+    db_id = db.insert(DB, data)
+    db.update(DB, db_id, {'itemid': db_id})
+
+    data['itemid'] = db_id
     return data
 
 
