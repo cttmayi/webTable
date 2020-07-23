@@ -27,7 +27,7 @@ class DbElasticsearch():
             return res[0]
         return None
 
-    def query(self, table_name, conds, from_=0, size=1000):
+    def query(self, table_name, conds, from_=0, size=10000):
         self.es.indices.refresh(index=table_name)
         query_body = {
             "query" : {
@@ -51,7 +51,7 @@ class DbElasticsearch():
             'query' : {"match_all" : {}},
         }
 
-        res_list = self.es.search(index=table_name, body=query_body, from_=0, size=100)[HITS][HITS]
+        res_list = self.es.search(index=table_name, body=query_body, from_=0, size=10000)[HITS][HITS]
         return self._to_list(res_list)
     
     @staticmethod
