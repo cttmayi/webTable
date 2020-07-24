@@ -42,17 +42,3 @@ class VueTablesModule(tornado.web.UIModule):
             values = self.__values(values),
             conf = conf,
         )
-
-
-    # def css_files(self):
-    #     return [
-    #         "https://cdn.datatables.net/1.10.15/css/jquery.dataTables.min.css",
-    #     ]
-
-    # def javascript_files(self):
-    #     return [
-    #         "https://cdn.jsdelivr.net/npm/vue",
-    #         "https://cdn.jsdelivr.net/npm/xe-utils",
-    #         "https://cdn.jsdelivr.net/npm/vxe-table",
-    #         "https://unpkg.com/axios/dist/axios.min.js",
-    #     ]

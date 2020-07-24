@@ -6,7 +6,7 @@
     <template>
 
     <vxe-modal v-model="insertDialog" title="添加" width="600" height=auto resize remember>
-    <vxe-form :data='dialogValue' title-align="right" title-width="60" @submit="submitDialogEvent" >
+    <vxe-form :data='dialogValue' title-align="right" title-width="120" @submit="submitDialogEvent" >
     {% for th in values['th'] %}
     {% if th['editor'] != 'text' %}
         <vxe-form-item title="{{ th['name'] }}" field="{{ th['field'] }}" span="24" reset-value=""

@@ -126,7 +126,7 @@ if __name__ == "__main__":
             (r"/" + conf.site + r"_query/(.+)/(.+)/(.+)", QueryHandler),
             (r"/" + conf.site + r"_update/(.+)/(.+)/(.+)", UpdateHandler),
             (r"/" + conf.site + r"_insert/(.+)/(.+)/(.+)", InsertHandler),
-            (r"/" + conf.site + r"_delete/(.+)/(.+)/(.+)", DeleteHandler),
+            (r"/" + conf.site + r"_delete/(.+)/(.+)/(.+)", DeleteHandler),           
             (r"/" + conf.site + r"(.+)/(.+)/(.+)", DefaultHandler),
             (r"/" + conf.site + r"(.+)/(.+)", DefaultHandler),
             (r"/" + conf.site + r"(.+)", DefaultHandler),
