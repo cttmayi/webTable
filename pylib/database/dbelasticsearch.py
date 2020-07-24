@@ -10,16 +10,18 @@ HITS = "hits"
 SOURCE = "_source"
 ID = "_id"
 
+es = Elasticsearch(maxsize=25)
+
 class DbElasticsearch():
-    es = Elasticsearch(maxsize=25)
+    
 
     def __init__(self):
 
         super().__init__()
 
     def create(self, table_name):
-        if not self.es.indices.exists(index=table_name):
-            self.es.indices.create(index=table_name)
+        if not es.indices.exists(index=table_name):
+            es.indices.create(index=table_name)
 
     def query_id(self, table_name, id):
         res = self.query(table_name, {ID : id})
@@ -28,7 +30,7 @@ class DbElasticsearch():
         return None
 
     def query(self, table_name, conds, from_=0, size=10000):
-        self.es.indices.refresh(index=table_name)
+        es.indices.refresh(index=table_name)
         query_body = {
             "query" : {
                 "bool": {
@@ -40,18 +42,18 @@ class DbElasticsearch():
         for key in conds.keys():
             cond = conds[key]
             query_body['query']['bool']['must'].append({'match': {key: cond}})
-        #print(query_body)
-        res_list = self.es.search(index=table_name, body=query_body, from_=from_, size=size)[HITS][HITS]
+
+        res_list = es.search(index=table_name, body=query_body, from_=from_, size=size)[HITS][HITS]
         return self._to_list(res_list)
 
     def query_all(self, table_name):
-        self.es.indices.refresh(index=table_name)
+        es.indices.refresh(index=table_name)
 
         query_body = {
             'query' : {"match_all" : {}},
         }
 
-        res_list = self.es.search(index=table_name, body=query_body, from_=0, size=10000)[HITS][HITS]
+        res_list = es.search(index=table_name, body=query_body, from_=0, size=10000)[HITS][HITS]
         return self._to_list(res_list)
     
     @staticmethod
@@ -67,26 +69,26 @@ class DbElasticsearch():
         update_body = {
             'doc': db_body
         }
-        self.es.update(index=table_name, id=id, body=update_body)
+        es.update(index=table_name, id=id, body=update_body)
 
 
     def insert(self, table_name, db_body, id=None):
         if id is None:
-            id = self.es.index(index=table_name,  body=db_body)[ID]
+            id = es.index(index=table_name,  body=db_body)[ID]
         else:
-            self.es.index(index=table_name,  id=id, body=db_body)
-        self.es.indices.refresh(index=table_name)
+            es.index(index=table_name,  id=id, body=db_body)
+        es.indices.refresh(index=table_name)
         return id
 
     def delete(self, table_name, id):
         try:
-            return self.es.delete(index=table_name, id=id)
+            return es.delete(index=table_name, id=id)
         except:
             return None
 
 
     def refresh(self, table_name):
-        self.es.indices.refresh(index=table_name)
+        es.indices.refresh(index=table_name)
 
     # def __get_cur_time(self):
         # cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
