@@ -84,7 +84,11 @@
 
             {% for th in values['th'] %}
             <vxe-table-column field="{{ th['field'] }}" title="{{ th['name'] }}"
-                width = "{{ th['width'] }}"
+                width="{{ th['width'] }}"
+
+                {% if th['width'] == '*' %}
+                min-width=200px
+                {% end %}
 
                 {% if 'fixed' in th %}
                 fixed = {{ th['fixed'] }}
