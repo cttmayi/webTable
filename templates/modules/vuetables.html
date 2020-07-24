@@ -78,13 +78,18 @@
 
             </template>
             {% if 'delete' in values['toolbar'] %}
-            <vxe-table-column type="checkbox" width="30"></vxe-table-column>
+            <vxe-table-column type="checkbox" width="30" fixed=left></vxe-table-column>
             {% end %}
-            <vxe-table-column type="seq" width="50"></vxe-table-column>
+            <vxe-table-column type="seq" width="50" fixed=left></vxe-table-column>
 
             {% for th in values['th'] %}
             <vxe-table-column field="{{ th['field'] }}" title="{{ th['name'] }}"
                 width = "{{ th['width'] }}"
+
+                {% if 'fixed' in th %}
+                fixed = {{ th['fixed'] }}
+                {% end %}
+
                 sortable
 
                 {% if th['editor'] == 'text' %}

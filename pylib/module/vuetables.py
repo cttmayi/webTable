@@ -31,6 +31,11 @@ class VueTablesModule(tornado.web.UIModule):
             if 'name' not in values['computed']:
                 values['computed']['name'] = ''
 
+        ths = values['th']
+
+        for i in range(values['fixed']['left']):
+            ths[i]['fixed'] = 'left'
+
         return values
 
     def render(self, name, p0, p1, values):

@@ -24,6 +24,7 @@ def html(p0, p1):
     vuetables['id'] = '_id'
     vuetables['toolbar'] = ['insert', 'delete']
     vuetables['search'] = ['name']
+    vuetables['fixed'] = {'left': 3}
 
     vuetables['height'] = 'window.screen.height-100'
     vuetables['th'] = []
@@ -36,7 +37,7 @@ def html(p0, p1):
     vuetables['th'].append(dt.th('Name', 'name', "200px", 'edit'))
     vuetables['th'].append(dt.th('Key/Index', 'key', "200px", 'edit'))
     vuetables['th'].append(dt.th('Value', 'value', "200px", 'edit'))
-    vuetables['th'].append(dt.th('Comment', 'commnet', '', 'edit'))
+    vuetables['th'].append(dt.th('Comment', 'commnet', '400px', 'edit'))
 
 
     ret['title'] = 'Configuration'
