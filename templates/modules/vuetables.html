@@ -83,8 +83,12 @@
             highlight-hover-row
             show-overflow
             class="vuetable-style"
+            {% if 'row-style' in values %}
             :row-class-name="rowClassName"
+            {% end %}
+            {% if 'row-style' in values %}
             :cell-class-name="cellClassName"
+            {% end %}
             :loading="loading"
 
             :toolbar="tableToolbar"
@@ -107,9 +111,9 @@
                     @change="searchEvent($event)"
                 ></vxe-input>
 
-                {% if 'computed' in values %}
                 <vxe-input :value='textToolbarData' editable=false size = "mini" readonly=true></vxe-input>
-                {% end %}
+
+
                 {% if 'insert' in values['toolbar'] %}
                 <vxe-button icon="fa fa-plus" @click="insertEvent()">添加</vxe-button>
                 {% end %}
@@ -120,6 +124,7 @@
                 {% if 'export' in values['toolbar'] %}
                 <vxe-button icon="fa fa-plus" @click="exportDataEvent">导出</vxe-button>
                 {% end %}
+
 
             </template>
             {% if 'delete' in values['toolbar'] %}
@@ -359,26 +364,35 @@ var Main = {
         },
 
         getTextToolbarData(data) {
-            try {
-                sum = 0
-                for (i=0; i<data.length; i++) {
-                    r = data[i]
-                    if (r != null) {
-                        field = values['computed']['field']
-                        if (field in r && r[field] != '') {
-                            s = parseFloat(r[field])
-                            sum = sum + s
+            recordNumberStr = '数量: ' +  data.length.toString()
+
+            if ('computed' in values){
+                try {
+                    sum = 0
+                    for (i=0; i<data.length; i++) {
+                        r = data[i]
+                        if (r != null) {
+                            field = values['computed']['field']
+                            if (field in r && r[field] != '') {
+                                s = parseFloat(r[field])
+                                sum = sum + s
+                            }
                         }
                     }
+                    this.textToolbarData = recordNumberStr
+                    +  ', ' + values['computed']['name'] + sum.toString()
                 }
-                this.textToolbarData = values['computed']['name'] + sum.toString()
+                catch (err) {
+                    this.textToolbarData = recordNumberStr
+                }
             }
-            catch (err) {
-                this.textToolbarData = ''
+            else {
+                this.textToolbarData = recordNumberStr
             }
         },
 
         cellClassName ({ row, rowIndex, column, columnIndex }) {
+            {% if 'cell-style' in values %}
             {% for cell in values['cell-sytle'] %}
             if (column.property === "{{ cell }}") {
                 {% for style in values['cell-sytle'][cell] %}
@@ -388,13 +402,16 @@ var Main = {
                 {% end %}
             }
             {% end %}
+            {% end %}
         },
 
         rowClassName ({ row, rowIndex }) {
+            {% if 'row-style' in values %}
             {% for style in values['row-sytle'] %}
             if ({{ style['cond'] }}) {
                 return "{{ style['style'] }}"
             }
+            {% end %}
             {% end %}
         },
 

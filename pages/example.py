@@ -41,7 +41,7 @@ def html(p0, p1):
         'font-size': '10px' 
     }
 
-    vuetables['computed'] = {'name': 'SUM(COST)=', 'field': 'unitcost', 'method': 'float'}
+    vuetables['computed'] = {'name': '成本: ', 'field': 'unitcost', 'method': 'float'}
 
     vuetables['row-sytle'] = [
         {'cond': "row.listprice < 700", 'style': 'bg-red'}
