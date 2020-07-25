@@ -1,4 +1,5 @@
 from pylib.database.dbdummy import DbDummy
+from pylib.database.dbelasticsearch import DbElasticsearch
 
 debug = True
 

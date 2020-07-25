@@ -43,7 +43,7 @@ if conf.configuration:
 
 
     def query(p0, p1):
-        data = db.query_all(DB)
+        data = db.query(DB)
 
         ret = {
             'data': data

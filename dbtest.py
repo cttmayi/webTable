@@ -1,17 +1,19 @@
 import unittest
 
-from database.dbelasticsearch import DbElasticsearch
+from pylib.database.dbelasticsearch import DbElasticsearch
+from pylib.database.dbdummy import DbDummy
 
 class TestDbFunctions(unittest.TestCase):
     def setUp(self):
-        self.db = DbElasticsearch()
+        #self.db = DbElasticsearch()
+        self.db = DbDummy()
         self.db.create('dbtest')
         
         
         pass
 
     def tearDown(self):
-        ret = self.db.query_all('dbtest')
+        ret = self.db.query('dbtest')
         for r in ret:
             self.db.delete('dbtest', r['_id'])
 
@@ -58,12 +60,12 @@ class TestDbFunctions(unittest.TestCase):
 
 
     def test_query_all(self):
-        ret = self.db.query_all('dbtest')
+        ret = self.db.query('dbtest')
 
         count = len(ret)
         self.db.insert('dbtest', {'ID': 1, 'ID2': 3})
         self.db.insert('dbtest', {'ID': 1, 'ID2': 3})
-        ret = self.db.query_all('dbtest')
+        ret = self.db.query('dbtest')
         self.assertEqual(len(ret), count + 2)
 
     def test_query(self):
@@ -76,7 +78,7 @@ class TestDbFunctions(unittest.TestCase):
         self.assertEqual(len(ret), count + 2)
 
     def test_query2(self):
-        id = self.db.insert('dbtest', {'ID': 520, 'ID_list': {'ID2': 2, 'ID3': 3}})
+        self.db.insert('dbtest', {'ID': 520, 'ID_list': {'ID2': 2, 'ID3': 3}})
         
         ret = self.db.query('dbtest', {'ID_list.ID2': 2})
         
@@ -84,11 +86,11 @@ class TestDbFunctions(unittest.TestCase):
         
 
     def test_delete_all(self):
-        ret = self.db.query_all('dbtest')
+        ret = self.db.query('dbtest')
         for r in ret:
             self.db.delete('dbtest', r['_id'])
             
-        ret = self.db.query_all('dbtest')
+        ret = self.db.query('dbtest')
         self.assertEqual(len(ret), 0)
 
 

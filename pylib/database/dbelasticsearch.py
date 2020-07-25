@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
-import time
+# import time
 
 from elasticsearch import Elasticsearch
 
@@ -29,32 +29,38 @@ class DbElasticsearch():
             return res[0]
         return None
 
-    def query(self, table_name, conds, from_=0, size=10000):
+    def query(self, table_name, conds=None, from_=0, size=10000):
         es.indices.refresh(index=table_name)
-        query_body = {
-            "query" : {
-                "bool": {
-                    "must":[]
+
+        if conds is not None:
+            query_body = {
+                "query" : {
+                    "bool": {
+                        "must":[]
+                    }
                 }
             }
-        }
 
-        for key in conds.keys():
-            cond = conds[key]
-            query_body['query']['bool']['must'].append({'match': {key: cond}})
+            for key in conds.keys():
+                cond = conds[key]
+                query_body['query']['bool']['must'].append({'match': {key: cond}})
+        else:
+            query_body = {
+                'query' : {"match_all" : {}},
+            }
 
         res_list = es.search(index=table_name, body=query_body, from_=from_, size=size)[HITS][HITS]
         return self._to_list(res_list)
 
-    def query_all(self, table_name):
-        es.indices.refresh(index=table_name)
+    # def query_all(self, table_name):
+    #     es.indices.refresh(index=table_name)
 
-        query_body = {
-            'query' : {"match_all" : {}},
-        }
+    #     query_body = {
+    #         'query' : {"match_all" : {}},
+    #     }
 
-        res_list = es.search(index=table_name, body=query_body, from_=0, size=10000)[HITS][HITS]
-        return self._to_list(res_list)
+    #     res_list = es.search(index=table_name, body=query_body, from_=0, size=10000)[HITS][HITS]
+    #     return self._to_list(res_list)
     
     @staticmethod
     def _to_list(res_list):
