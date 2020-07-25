@@ -85,6 +85,7 @@
             class="vuetable-style"
             :row-class-name="rowClassName"
             :cell-class-name="cellClassName"
+            :loading="loading"
 
             :toolbar="tableToolbar"
             row-id = "{{ values['id'] }}"
@@ -172,6 +173,8 @@ var Main = {
             tableData: [],
             textToolbarData: '',
 
+            loading: false,
+
             height: {{ values['height'] }},
 
             timer: null,
@@ -201,6 +204,7 @@ var Main = {
 
     methods: {
         loadData() {
+            this.loading = true
             console.log('loadData')
             let obj = this;
 
@@ -209,6 +213,7 @@ var Main = {
                 .then(function (response) {
                     obj.tableData = response.data.data;
                     obj.textData = response.data.text
+                    obj.loading = false
                 })
                 .catch(function (error) { // 请求失败处理
                     console.log(error);
