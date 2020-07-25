@@ -6,12 +6,7 @@ import conf
 if conf.configuration:
 
     from pylib.database.dbelasticsearch import DbElasticsearch
-
-
-    import pylib.module.vuetables as dt
     import pylib.configuration.configuration as configuration
-
-
 
     DB = 'configuration'
     db = DbElasticsearch()
@@ -25,26 +20,25 @@ if conf.configuration:
 
         vuetables['id'] = '_id'
         vuetables['toolbar'] = ['insert', 'delete']
-        vuetables['search'] = ['name']
-        vuetables['fixed'] = {'left': 3}
 
         vuetables['height'] = 'window.innerHeight - 50'
-        vuetables['th'] = []
-        vuetables['th'].append(dt.th('Group', 'group', "200px", 'edit'))
 
-        type_list = ['']
-        type_list.extend(configuration.TYPES)
+        options = ['']
+        options.extend(configuration.TYPES)
 
-        vuetables['th'].append(dt.th('Type', 'type', "100px", 'select', type_list))
-        vuetables['th'].append(dt.th('Name', 'name', "200px", 'edit'))
-        vuetables['th'].append(dt.th('Key/Index', 'key', "200px", 'edit'))
-        vuetables['th'].append(dt.th('Value', 'value', "200px", 'edit'))
-        vuetables['th'].append(dt.th('Comment', 'commnet', '*', 'edit'))
+        vuetables['th'] = [
+        {'name': 'Group', 'field': 'group', 'width': '200', 'editor': 'edit', 'fixed': 'left'},
+        {'name': 'Type', 'field': 'type', 'width': '200', 'editor': 'select', 'fixed': 'left',
+            'options': options},
+        {'name': 'Name', 'field': 'name', 'width': '200', 'editor': 'edit', 'fixed': 'left'},
+        {'name': 'Key', 'field': 'key', 'width': '200', 'editor': 'edit'},
+        {'name': 'Value', 'field': 'value', 'width': '200', 'editor': 'edit'},
+        {'name': 'Comment', 'field': 'commnet', 'width': '*', 'editor': 'edit'},
+        ]
 
         ret['title'] = 'Configuration'
         ret['vuetables'] = vuetables
 
-        #ret['template'] = 'example'
         return ret
 
 
@@ -54,7 +48,6 @@ if conf.configuration:
         ret = {
             'data': data
         }
-
         return ret
 
 
