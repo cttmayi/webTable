@@ -1,8 +1,9 @@
+import conf
 
 from pylib.database.dbelasticsearch import DbElasticsearch
 
 DB = 'configuration'
-db = DbElasticsearch()
+db = conf.db
 db.create(DB)
 
 
