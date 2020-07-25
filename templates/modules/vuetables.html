@@ -83,10 +83,10 @@
             highlight-hover-row
             show-overflow
             class="vuetable-style"
-            {% if 'row-style' in values %}
+            {% if 'row_style' in values %}
             :row-class-name="rowClassName"
             {% end %}
-            {% if 'cell-style' in values %}
+            {% if 'cell_style' in values %}
             :cell-class-name="cellClassName"
             {% end %}
             :loading="loading"
@@ -405,7 +405,7 @@ var Main = {
         },
 
         rowClassName ({ row, rowIndex }) {
-            {% if 'row-style' in values %}
+            {% if 'row_style' in values %}
             {% for style in values['row_style'] %}
             if ({{ style['cond'] }}) {
                 return "{{ style['style'] }}"
