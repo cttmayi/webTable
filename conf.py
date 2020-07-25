@@ -7,3 +7,5 @@ port = 80
 site = '' #'web/'
 
 queue = False
+
+configuration = True
