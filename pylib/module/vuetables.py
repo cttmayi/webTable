@@ -33,8 +33,9 @@ class VueTablesModule(tornado.web.UIModule):
 
         ths = values['th']
 
-        for i in range(values['fixed']['left']):
-            ths[i]['fixed'] = 'left'
+        if 'fixed' in values:
+            for i in range(values['fixed']['left']):
+                ths[i]['fixed'] = 'left'
 
         return values
 
