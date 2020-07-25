@@ -27,7 +27,7 @@ def html(p0, p1):
     vuetables['toolbar'] = ['insert', 'delete'] # 配置 Toolbar 按钮
     vuetables['search'] = ['itemid', 'listprice', 'unitcost'] # 搜索范围
     # vuetables['number'] = True # 支持第1列自动序列
-    vuetables['height'] = 'window.screen.height*2/3' # 是否支持垂直scroll(如不支持, 注释即可), 可用javacript代码, 或者数字(600, 800等).
+    vuetables['height'] = 'window.innerHeight - 150' # '700' # 设定表格高度, 可用javacript代码, 或者字符串('600'等).
     vuetables['th'] = [] # 用于列描述
     vuetables['th'].append(dt.th('ID', 'itemid', "100px")) # 第1个参数为显示名, 第2参数为Key名称. 列宽度为100px, 
     vuetables['th'].append(dt.th('PID', 'productid', "200px"))

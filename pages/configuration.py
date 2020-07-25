@@ -26,7 +26,7 @@ def html(p0, p1):
     vuetables['search'] = ['name']
     vuetables['fixed'] = {'left': 3}
 
-    vuetables['height'] = 'window.screen.height-100'
+    vuetables['height'] = 'window.innerHeight - 50'
     vuetables['th'] = []
     vuetables['th'].append(dt.th('Group', 'group', "200px", 'edit'))
 

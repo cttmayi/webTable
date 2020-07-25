@@ -50,7 +50,7 @@
             row-id = "{{ values['id'] }}"
             ref = "xTable"
             size = "mini"
-            height = "{{ values['height'] }}"
+            :height = "height"
 
             :data = "filterData"
             :edit-config = "{trigger: 'click', mode: 'cell', icon: 'fa fa-pencil'}"
@@ -131,6 +131,8 @@ var Main = {
             textData:'',
             tableData: [],
             textToolbarData: '',
+
+            height: {{ values['height'] }},
 
             timer: null,
             loadTimer: null,
