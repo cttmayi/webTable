@@ -114,7 +114,11 @@
                 <vxe-button icon="fa fa-plus" @click="insertEvent()">添加</vxe-button>
                 {% end %}
                 {% if 'delete' in values['toolbar'] %}
-                <vxe-button icon="fa fa-trash-o" @click="removeEvent">删除</vxe-button>
+                <vxe-button icon="fa fa-plus" @click="removeEvent">删除</vxe-button>
+                {% end %}
+
+                {% if 'export' in values['toolbar'] %}
+                <vxe-button icon="fa fa-plus" @click="exportDataEvent">导出</vxe-button>
                 {% end %}
 
             </template>
@@ -324,6 +328,10 @@ var Main = {
                 obj.tableData.unshift(value)
 
             })
+        },
+
+        exportDataEvent () {
+            this.$refs.xTable.exportData({ type: 'csv' })
         },
 
         keyDownEvent(event) {
