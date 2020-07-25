@@ -259,25 +259,28 @@ var Main = {
             let cellValue = row[field]
             let obj = this
 
-            if (cellValue != null) {
-                const params = new URLSearchParams();
-                params.append('id', row[values['id']]);
-                params.append('field', field);
-                params.append('value', cellValue);
+            if (xTable.isUpdateByRow(row, field)) {
+                if (cellValue != null) {
+                    const params = new URLSearchParams();
+                    params.append('id', row[values['id']]);
+                    params.append('field', field);
+                    params.append('value', cellValue);
 
-                axios
-                .post(url_update, params)
-                .then( function(response){
-                    row[field] = response.data
+                    axios
+                    .post(url_update, params)
+                    .then( function(response){
+                        row[field] = response.data
 
-                    for (i=0; i<obj.tableData.length; i++){
-                        if (obj.tableData[i][values['id']] == row[values['id']])
-                            obj.tableData[i] = row;
-                    }
-                })
-                .catch(function (error) { // 请求失败处理
-                    console.log(error);
-                });
+                        for (i=0; i<obj.tableData.length; i++){
+                            if (obj.tableData[i][values['id']] == row[values['id']])
+                                obj.tableData[i] = row;
+                        }
+                        xTable.reloadRow(row, null, field)
+                    })
+                    .catch(function (error) { // 请求失败处理
+                        console.log(error);
+                    });
+                }
             }
         },
 
