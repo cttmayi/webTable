@@ -32,7 +32,7 @@ def html(p0, p1):
     vuetables['th'].append(dt.th('ID', 'itemid', "100px")) # 第1个参数为显示名, 第2参数为Key名称. 列宽度为100px, 
     vuetables['th'].append(dt.th('PID', 'productid', "200px"))
     vuetables['th'].append(dt.th('Price', 'listprice', "200px", 'edit')) # edit: 可编辑
-    vuetables['th'].append(dt.th('Cost', 'unitcost', "200px", 'select', ['', '100', '200'])) # select: 可选择
+    vuetables['th'].append(dt.th('Cost', 'unitcost', "200px", 'select', ['', '100', '200', '300'])) # select: 可选择
     vuetables['th'].append(dt.th('Attr', 'attr1', "200px"))
     vuetables['th'].append(dt.th('Status', 'status'))
 
@@ -42,6 +42,19 @@ def html(p0, p1):
     }
 
     vuetables['computed'] = {'name': 'SUM(COST)=', 'field': 'unitcost', 'method': 'float'}
+
+    vuetables['row-sytle'] = [
+        {'cond': "row.listprice < 700", 'style': 'bg-red'}
+    ]
+
+    vuetables['cell-sytle'] = {
+        'unitcost': [
+            {'cond': "row.unitcost > 150", 'style': 'bg-green'}
+        ]
+
+        
+    }
+
 
     ret['title'] = 'Web' # Web 标题
     ret['vuetables'] = vuetables
@@ -105,4 +118,4 @@ def db_insert(db, id, price):
 
 for i in range(2):
     db_insert(db, 'TV.'+str(i), 1000)
-
+db_insert(db, 'TVD', 300)

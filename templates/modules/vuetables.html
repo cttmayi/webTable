@@ -1,4 +1,40 @@
 {% autoescape None %}
+<style type="text/css">
+    .vuetable-style .vxe-body--row.bg-red {
+        background-color: red;
+        color: #fff;
+    }
+    .vuetable-style .vxe-body--row.bg-yellow {
+        background-color: #f60;
+        color: #fff;
+    }
+    .vuetable-style .vxe-body--row.bg-green {
+        background-color: #187;
+        color: #fff;
+    }
+    .vuetable-style .vxe-body--row.bg-blue {
+        background-color: #2db7f5;
+        color: #fff;
+    }
+
+    .vuetable-style .vxe-body--column.bg-red {
+        background-color: red;
+        color: #fff;
+    }
+    .vuetable-style .vxe-body--column.bg-yellow {
+        background-color: #f60;
+        color: #fff;
+    }
+    .vuetable-style .vxe-body--column.bg-green {
+        background-color: #187;
+        color: #fff;
+    }
+    .vuetable-style .vxe-body--column.bg-blue {
+        background-color: #2db7f5;
+        color: #fff;
+    }
+</style> 
+
 
 
 <div id="{{ values['name'] }}">
@@ -46,6 +82,10 @@
             keep-source
             highlight-hover-row
             show-overflow
+            class="vuetable-style"
+            :row-class-name="rowClassName"
+            :cell-class-name="cellClassName"
+
             :toolbar="tableToolbar"
             row-id = "{{ values['id'] }}"
             ref = "xTable"
@@ -241,6 +281,8 @@ var Main = {
             }
         },
 
+
+
         submitDialogEvent(data, event){
             let obj = this
             axios
@@ -318,7 +360,28 @@ var Main = {
             catch (err) {
                 this.textToolbarData = ''
             }
-        }
+        },
+
+        cellClassName ({ row, rowIndex, column, columnIndex }) {
+            {% for cell in values['cell-sytle'] %}
+            if (column.property === "{{ cell }}") {
+                {% for style in values['cell-sytle'][cell] %}
+                if ({{ style['cond'] }}) {
+                    return "{{ style['style'] }}"
+                }
+                {% end %}
+            }
+            {% end %}
+        },
+
+        rowClassName ({ row, rowIndex }) {
+            {% for style in values['row-sytle'] %}
+            if ({{ style['cond'] }}) {
+                return "{{ style['style'] }}"
+            }
+            {% end %}
+        },
+
 
     },
     computed: {

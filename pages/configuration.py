@@ -39,7 +39,6 @@ def html(p0, p1):
     vuetables['th'].append(dt.th('Value', 'value', "200px", 'edit'))
     vuetables['th'].append(dt.th('Comment', 'commnet', '*', 'edit'))
 
-
     ret['title'] = 'Configuration'
     ret['vuetables'] = vuetables
 
