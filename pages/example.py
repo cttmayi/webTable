@@ -1,19 +1,11 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 
-from pylib.page.basepage import BasePage
-
-# from pylib.database.dbelasticsearch import DbElasticsearch
-from pylib.database.dbdummy import DbDummy
-
-#import module.datatables as dt
-import pylib.module.vuetables as dt
-
 import conf
 
+
 DB = 'example' # 数据库名称
-#db = DbElasticsearch() # 本代码支持使用Elasticsearch
-db = DbDummy() # Dummy数据库(使用), 用于调试
+db = conf.db
 db.create(DB) # 如没有数据库, 创建数据库
 
 
