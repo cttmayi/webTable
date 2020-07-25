@@ -51,7 +51,7 @@
         :item-render="{name: 'input', defaultValue: ''}"
         {% end %}
         {% if th['editor'] == 'select' %}
-        :item-render="{name: 'select', options: {{ th['data'] }} }"
+        :item-render="{name: 'select', options: {{ th['options'] }} }"
         {% end %}            
         ></vxe-form-item>
     {% end %}
@@ -86,7 +86,7 @@
             {% if 'row-style' in values %}
             :row-class-name="rowClassName"
             {% end %}
-            {% if 'row-style' in values %}
+            {% if 'cell-style' in values %}
             :cell-class-name="cellClassName"
             {% end %}
             :loading="loading"
@@ -99,8 +99,8 @@
 
             :data = "filterData"
             :edit-config = "{trigger: 'click', mode: 'cell', icon: 'fa fa-pencil'}"
-            {% if 'order' in values %}
-            :sort-config = "{trigger: 'cell', defaultSort: {{ values['order'] }}, orders: ['desc', 'asc', null]}"
+            {% if 'default_sort' in values %}
+            :sort-config = "{trigger: 'cell', defaultSort: {{ values['default_sort'] }}, orders: ['desc', 'asc', null]}"
             {% end %}
 
             @edit-closed = "updateEvent"
@@ -133,18 +133,19 @@
             <vxe-table-column type="seq" width="50" fixed=left></vxe-table-column>
 
             {% for th in values['th'] %}
-            <vxe-table-column field="{{ th['field'] }}" title="{{ th['name'] }}"
+            <vxe-table-column
+                sortable
+                field="{{ th['field'] }}"
+                title="{{ th['name'] }}"
                 width="{{ th['width'] }}"
 
-                {% if th['width'] == '*' %}
-                min-width=200px
+                {% if 'min-width' in th %}
+                min-width={{ th['min-width'] }}
                 {% end %}
 
                 {% if 'fixed' in th %}
                 fixed = {{ th['fixed'] }}
                 {% end %}
-
-                sortable
 
                 {% if th['editor'] == 'text' %}
                 type = "html"
@@ -153,7 +154,7 @@
                 :edit-render="{name: 'input', defaultValue: ''}"
                 {% end %}
                 {% if th['editor'] == 'select' %}
-                :edit-render="{name: 'select', options: {{ th['data'] }} , autoselect: true, events: {input: inputChangeEvent} }"
+                :edit-render="{name: 'select', options: {{ th['options'] }} , autoselect: true, events: {input: inputChangeEvent} }"
                 {% end %}
             >
             </vxe-table-column>
@@ -392,22 +393,20 @@ var Main = {
         },
 
         cellClassName ({ row, rowIndex, column, columnIndex }) {
-            {% if 'cell-style' in values %}
-            {% for cell in values['cell-sytle'] %}
-            if (column.property === "{{ cell }}") {
-                {% for style in values['cell-sytle'][cell] %}
-                if ({{ style['cond'] }}) {
-                    return "{{ style['style'] }}"
+            {% for th in values['th'] %}
+            if (column.property === "{{ th['field'] }}") {
+                {% if 'style' in th %}
+                if ({{ th['style']['cond'] }}) {
+                    return "{{ th['style']['style'] }}"
                 }
                 {% end %}
             }
-            {% end %}
             {% end %}
         },
 
         rowClassName ({ row, rowIndex }) {
             {% if 'row-style' in values %}
-            {% for style in values['row-sytle'] %}
+            {% for style in values['row_style'] %}
             if ({{ style['cond'] }}) {
                 return "{{ style['style'] }}"
             }
@@ -421,7 +420,7 @@ var Main = {
         filterData () {
             const filterName = XEUtils.toString(this.filterName).trim().toLowerCase()
             if (filterName) {
-                const searchProps = values['search'];
+                const searchProps = {{ values['search_fields'] }};
                 const filters = filterName.split(" ");
                 const rest = this.tableData.filter(
                     function (item) {

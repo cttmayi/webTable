@@ -23,38 +23,40 @@ def html(p0, p1):
     vuetables = {}
     # vuetables['name'] = 'app' 
     vuetables['id'] = 'itemid' # 唯一 field ID, 用于修改数据
-    vuetables['order'] = {'field': 'itemid', 'order': 'desc'} # 排序，asc/desc
+    vuetables['default_sort'] = {'field': 'itemid', 'order': 'desc'} # 排序，asc/desc
     vuetables['toolbar'] = ['insert', 'delete', 'export'] # 配置 Toolbar 按钮
-    vuetables['search'] = ['itemid', 'listprice', 'unitcost'] # 搜索范围
-    # vuetables['number'] = True # 支持第1列自动序列
     vuetables['height'] = 'window.innerHeight - 150' # '700' # 设定表格高度, 可用javacript代码, 或者字符串('600'等).
-    vuetables['th'] = [] # 用于列描述
-    vuetables['th'].append(dt.th('ID', 'itemid', "100px")) # 第1个参数为显示名, 第2参数为Key名称. 列宽度为100px, 
-    vuetables['th'].append(dt.th('PID', 'productid', "200px"))
-    vuetables['th'].append(dt.th('Price', 'listprice', "200px", 'edit')) # edit: 可编辑
-    vuetables['th'].append(dt.th('Cost', 'unitcost', "200px", 'select', ['', '100', '200', '300'])) # select: 可选择
-    vuetables['th'].append(dt.th('Attr', 'attr1', "200px"))
-    vuetables['th'].append(dt.th('Status', 'status'))
+
+
+    vuetables['th'] = [
+        {'name': 'ID', 'field': 'itemid', 'width': '100', # name为显示名, field为Key名称. width为100,
+            'fixed': 'left'}, # fixed 表示是否固定
+        {'name': 'PID', 'field': 'productid', 'width': '200',
+            'editor': 'select', 'options': [
+                { 'label': '', 'value': '' }, # label为选项显示名称， value为保存数据 
+                { 'label': '产品1', 'value': 'P1' }, 
+                { 'label': '产品2', 'value': 'P2' }, 
+                { 'label': '产品3', 'value': 'P3' }, 
+            ],},
+        {'name': 'Price', 'field': 'listprice', 'width': '200', 'editor': 'edit'},
+        {'name': 'Cost', 'field': 'unitcost', 'width': '200',
+            'editor': 'select', 'options': ['', '100', '200', '300'], # Options 简洁表达方式，lable和value一致
+            'style': {'cond': "row.unitcost > 150", 'style': 'bg-green'}},
+        {'name': 'Status', 'field': 'status', 'width': '*', 'editor': 'edit', 
+            'search': 'false'}, # 字段默认可搜索， 设定不可搜索（'search': 'false'）
+    ]
+
 
     vuetables['summary'] = { 
         'height': '100px', 
         'font-size': '10px' 
     }
 
-    vuetables['computed'] = {'name': '成本: ', 'field': 'unitcost', 'method': 'float'}
+    vuetables['computed'] = {'name': '成本: ', 'field': 'unitcost', 'method': 'float'} # 计算求和显示
 
-    vuetables['row-sytle'] = [
-        {'cond': "row.listprice < 700", 'style': 'bg-red'}
+    vuetables['row_style'] = [
+        {'cond': "row.listprice < 700", 'style': 'bg-red'} # 行颜色条件设定
     ]
-
-    vuetables['cell-sytle'] = {
-        'unitcost': [
-            {'cond': "row.unitcost > 150", 'style': 'bg-green'}
-        ]
-
-        
-    }
-
 
     ret['title'] = 'Web' # Web 标题
     ret['vuetables'] = vuetables
@@ -90,7 +92,7 @@ def update(p0, p1, db_id, field, value):
 
 
 def insert(p0, p1):
-    data = {'productid': 'NTV'}
+    data = {}
     db_id = db.insert(DB, data)
     db.update(DB, db_id, {'itemid': db_id})
 

@@ -24,7 +24,9 @@
     </head>
 
     <body>
+        {% if 'vuetables' in html %}
         {% module VueTables(name, p0, p1, html['vuetables']) %}
+        {% end %}
     </body>
 
 </html>

@@ -7,37 +7,75 @@ def th(name, field, width='*', editor='text', data=[]):
         list_data.append({ 'label': d, 'value': d })
 
     return {
-        'name': name, 
+        'name': name,
         'field': field,
-        'width': width, 
-        'editor': editor, 
+        'width': width,
+        'editor': editor,
         'data': str(list_data)
     }
 
-class VueTables:
-    def __init__(self):
-        pass
+
 
 
 class VueTablesModule(tornado.web.UIModule):
-    def __values(self, values):
-        if 'name' not in values:
-            values['name'] = 'app' 
+    
+    def __get_values(self, values, key, def_value=None):
+        if key in values:
+            self.values[key] = values[key]
+        elif def_value is not None:
+            self.values[key] = def_value
 
-        if 'toolbar' not in values:
-            values['toolbar'] = []
+    def __values(self, values):
+        self.values = {}
+        self.values['prop'] = {}
+
+        self.__get_values(values, 'name', 'app')
+        self.__get_values(values, 'id', '_id')
+        self.__get_values(values, 'toolbar', [])
+        self.__get_values(values, 'search', [])
+        self.__get_values(values, 'height', 'auto')
 
         if 'computed' in values:
             if 'name' not in values['computed']:
                 values['computed']['name'] = ''
 
-        ths = values['th']
+        self.__get_values(values, 'computed')
+        self.__get_values(values, 'summary')
 
-        if 'fixed' in values:
-            for i in range(values['fixed']['left']):
-                ths[i]['fixed'] = 'left'
+        self.values['th'] = []
+        self.values['search_fields'] = []
 
-        return values
+        for th in values['th']:
+            if 'width' not in th:
+                th['width'] = '*'
+
+            if th['width'] == '*':
+                if 'min-width' not in th:
+                    th['min-width'] = '200'
+
+            if 'editor' not in th:
+                th['editor'] = 'text'
+            if 'options' in th:
+                for i in range(len(th['options'])):
+                    op = th['options'][i]
+                    if isinstance(op, str):
+                        th['options'][i] = { 'label': op, 'value': op }
+
+
+            if 'style' in th:
+                self.values['cell_style'] = 'default'
+
+            if not ('search' in th and th['search'] == 'false'):
+                self.values['search_fields'].append(th['field'])
+
+            self.values['th'].append(th)
+
+        self.__get_values(values, 'row_style')
+
+        self.__get_values(values, 'default_sort')
+
+
+        return self.values
 
     def render(self, name, p0, p1, values):
         return self.render_string(
