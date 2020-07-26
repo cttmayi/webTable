@@ -82,7 +82,11 @@
             keep-source
             highlight-hover-row
             show-overflow
+            row-id = "{{ values['id'] }}"
+            ref = "xTable"
+            size = "mini"
             class="vuetable-style"
+
             {% if 'row_style' in values %}
             :row-class-name="rowClassName"
             {% end %}
@@ -90,13 +94,8 @@
             :cell-class-name="cellClassName"
             {% end %}
             :loading="loading"
-
             :toolbar="tableToolbar"
-            row-id = "{{ values['id'] }}"
-            ref = "xTable"
-            size = "mini"
             :height = "height"
-
             :data = "filterData"
             :edit-config = "{trigger: 'click', mode: 'cell', icon: 'fa fa-pencil'}"
             {% if 'default_sort' in values %}
@@ -112,41 +111,32 @@
                 ></vxe-input>
 
                 <vxe-input :value='textToolbarData' editable=false size = "mini" readonly=true></vxe-input>
-
-
                 {% if 'insert' in values['toolbar'] %}
-                <vxe-button icon="fa fa-plus" @click="insertEvent()">添加</vxe-button>
+                <vxe-button icon="fa fa-plus" @click="insertEvent">添加</vxe-button>
                 {% end %}
                 {% if 'delete' in values['toolbar'] %}
                 <vxe-button icon="fa fa-plus" @click="removeEvent">删除</vxe-button>
                 {% end %}
-
                 {% if 'export' in values['toolbar'] %}
                 <vxe-button icon="fa fa-plus" @click="exportDataEvent">导出</vxe-button>
                 {% end %}
-
-
             </template>
             {% if 'delete' in values['toolbar'] %}
             <vxe-table-column type="checkbox" width="30" fixed=left></vxe-table-column>
             {% end %}
             <vxe-table-column type="seq" width="50" fixed=left></vxe-table-column>
-
             {% for th in values['th'] %}
             <vxe-table-column
                 sortable
                 field="{{ th['field'] }}"
                 title="{{ th['name'] }}"
                 width="{{ th['width'] }}"
-
                 {% if 'min-width' in th %}
                 min-width={{ th['min-width'] }}
                 {% end %}
-
                 {% if 'fixed' in th %}
                 fixed = {{ th['fixed'] }}
                 {% end %}
-
                 {% if th['editor'] == 'text' %}
                 type = "html"
                 {% end %}
@@ -156,8 +146,7 @@
                 {% if th['editor'] == 'select' %}
                 :edit-render="{name: 'select', options: {{ th['options'] }} , autoselect: true, events: {input: inputChangeEvent} }"
                 {% end %}
-            >
-            </vxe-table-column>
+            ></vxe-table-column>
             {% end %}
 
         </vxe-table>
@@ -242,7 +231,6 @@ var Main = {
             if (selectRecords.length) {
                 this.$XModal.confirm('您确定要删除选中的数据吗?').then(type => {
                     if (type === 'confirm') {
-
                         let removeRecords = xTable.getCheckboxRecords()
 
                         for (i=0; i<removeRecords.length; i++) {
@@ -258,7 +246,6 @@ var Main = {
                                 }
                                 this.loadTimer = setTimeout(obj.loadData, 100);
                             })
-
                         }
                         xTable.removeCheckboxRow()
                     }
@@ -299,8 +286,6 @@ var Main = {
             }
         },
 
-
-
         submitDialogEvent(data, event){
             let obj = this
             axios
@@ -312,22 +297,20 @@ var Main = {
                     value[key] = response.data[key];
                 }
 
-                let id = value['{{ values['id'] }}']
+                let id = value[values['id']]
                 let params
                 {% for th in values['th'] %}
                     field = "{{ th['field'] }}"
-                    
-                {% if th['editor'] != 'text' %}
-                if (field in data.data) {
-                    value[field] = data.data[field]
-                    params = new URLSearchParams();
-                    params.append('id', id);
-                    params.append('field', field );
-                    params.append('value', value[field]);
-                    axios.post(url_update, params)
-                }
-
-                {% end %}
+                    {% if th['editor'] != 'text' %}
+                        if (field in data.data) {
+                            value[field] = data.data[field]
+                            params = new URLSearchParams();
+                            params.append('id', id);
+                            params.append('field', field );
+                            params.append('value', value[field]);
+                            axios.post(url_update, params)
+                        }
+                    {% end %}
                 {% end %}
 
                 obj.insertDialog = false
@@ -364,9 +347,8 @@ var Main = {
             xTable.clearActived();
         },
 
-        getTextToolbarData(data) {
-            recordNumberStr = '数量: ' +  data.length.toString()
-
+        updateTextToolbarData(data) {
+            recordNumberStr = '总数: ' +  data.length.toString()
             if ('computed' in values){
                 try {
                     sum = 0
@@ -414,7 +396,6 @@ var Main = {
             {% end %}
         },
 
-
     },
     computed: {
         filterData () {
@@ -434,10 +415,10 @@ var Main = {
                         return ret;
                 })
 
-                this.getTextToolbarData(rest)
+                this.updateTextToolbarData(rest)
                 return rest
             }
-            this.getTextToolbarData(this.tableData)
+            this.updateTextToolbarData(this.tableData)
             return this.tableData
         }
     }
