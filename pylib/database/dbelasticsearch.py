@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # import time
-from datetime import datetime
+
 
 from elasticsearch import Elasticsearch
 
@@ -16,12 +16,13 @@ es = Elasticsearch(maxsize=25)
 class DbElasticsearch():
 
     def __init__(self):
+        self.es = es
         super().__init__()
 
 
     def create(self, table_name):
-        if not es.indices.exists(index=table_name):
-            es.indices.create(index=table_name)
+        if not self.es.indices.exists(index=table_name):
+            self.es.indices.create(index=table_name)
 
 
     def query_id(self, table_name, id):
@@ -32,7 +33,7 @@ class DbElasticsearch():
 
 
     def query(self, table_name, conds=None, from_=0, size=10000):
-        es.indices.refresh(index=table_name)
+        self.es.indices.refresh(index=table_name)
 
         if conds is not None:
             query_body = {
@@ -51,7 +52,7 @@ class DbElasticsearch():
                 'query' : {"match_all" : {}},
             }
 
-        res_list = es.search(index=table_name, body=query_body, from_=from_, size=size)[HITS][HITS]
+        res_list = self.es.search(index=table_name, body=query_body, from_=from_, size=size)[HITS][HITS]
         return self._to_list(res_list)
 
     
@@ -69,31 +70,28 @@ class DbElasticsearch():
         update_body = {
             'doc': db_body
         }
-        es.update(index=table_name, id=id, body=update_body)
+        self.es.update(index=table_name, id=id, body=update_body)
 
 
     def insert(self, table_name, db_body, id=None):
         if id is None:
-            id = es.index(index=table_name,  body=db_body)[ID]
+            id = self.es.index(index=table_name,  body=db_body)[ID]
         else:
-            es.index(index=table_name,  id=id, body=db_body)
-        es.indices.refresh(index=table_name)
+            self.es.index(index=table_name,  id=id, body=db_body)
+        self.es.indices.refresh(index=table_name)
         return id
 
 
     def delete(self, table_name, id):
         try:
-            return es.delete(index=table_name, id=id)
+            return self.es.delete(index=table_name, id=id)
         except:
             return None
 
 
     def refresh(self, table_name):
-        es.indices.refresh(index=table_name)
+        self.es.indices.refresh(index=table_name)
 
 
-    def __get_now_timestamp(self):
-        now = datetime.now()
-        return now.timestamp()
 
 
