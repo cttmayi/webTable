@@ -1,6 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # import time
+from datetime import datetime
 
 from elasticsearch import Elasticsearch
 
@@ -13,21 +14,22 @@ ID = "_id"
 es = Elasticsearch(maxsize=25)
 
 class DbElasticsearch():
-    
 
     def __init__(self):
-
         super().__init__()
+
 
     def create(self, table_name):
         if not es.indices.exists(index=table_name):
             es.indices.create(index=table_name)
+
 
     def query_id(self, table_name, id):
         res = self.query(table_name, {ID : id})
         if len(res) > 0:
             return res[0]
         return None
+
 
     def query(self, table_name, conds=None, from_=0, size=10000):
         es.indices.refresh(index=table_name)
@@ -52,15 +54,6 @@ class DbElasticsearch():
         res_list = es.search(index=table_name, body=query_body, from_=from_, size=size)[HITS][HITS]
         return self._to_list(res_list)
 
-    # def query_all(self, table_name):
-    #     es.indices.refresh(index=table_name)
-
-    #     query_body = {
-    #         'query' : {"match_all" : {}},
-    #     }
-
-    #     res_list = es.search(index=table_name, body=query_body, from_=0, size=10000)[HITS][HITS]
-    #     return self._to_list(res_list)
     
     @staticmethod
     def _to_list(res_list):
@@ -70,6 +63,7 @@ class DbElasticsearch():
             content[ID] = (res[ID])
             content_list.append(content)
         return content_list
+
 
     def update(self, table_name, id, db_body):
         update_body = {
@@ -86,6 +80,7 @@ class DbElasticsearch():
         es.indices.refresh(index=table_name)
         return id
 
+
     def delete(self, table_name, id):
         try:
             return es.delete(index=table_name, id=id)
@@ -96,6 +91,9 @@ class DbElasticsearch():
     def refresh(self, table_name):
         es.indices.refresh(index=table_name)
 
-    # def __get_cur_time(self):
-        # cur_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
-        # return cur_time
+
+    def __get_now_timestamp(self):
+        now = datetime.now()
+        return now.timestamp()
+
+
