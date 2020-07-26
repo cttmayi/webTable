@@ -68,13 +68,10 @@ class QueryHandler(tornado.web.RequestHandler):
 class UpdateHandler(tornado.web.RequestHandler):
     def post(self, name, p0, p1):
         page = load_page(name)
-
         db_id = self.get_argument('id')
         field = self.get_argument('field')
         value = self.get_argument('value')
-
         value = page.update(p0, p1, db_id, field, value)
-
         self.write(value)
 
 
@@ -84,6 +81,7 @@ class InsertHandler(tornado.web.RequestHandler):
 
         out = page.insert(p0, p1)
         self.write(json.dumps(out))
+
 
 class DeleteHandler(tornado.web.RequestHandler):
     def post(self, name, p0, p1):
@@ -104,15 +102,16 @@ def _update_process(q):
         page = load_page(name)
         page.update_thread(p0, p1, db_id, field, value)
 
-pages = {}
 
+pages = {}
 def load_page(name):
     if name not in pages:
         pages[name] = __import__('pages.'+name, fromlist=[name])
     return pages[name]
 
-if __name__ == "__main__":
 
+import time
+if __name__ == "__main__":
     if conf.queue:
         q = Queue()
         conf.queue = q
