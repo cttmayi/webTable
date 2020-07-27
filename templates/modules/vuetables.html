@@ -87,12 +87,8 @@
             size = "mini"
             class="vuetable-style"
 
-            {% if 'row_style' in values %}
             :row-class-name="rowClassName"
-            {% end %}
-            {% if 'cell_style' in values %}
             :cell-class-name="cellClassName"
-            {% end %}
             :loading="loading"
             :toolbar="tableToolbar"
             :height = "height"
@@ -374,6 +370,7 @@ var Main = {
 
         cellClassName ({ row, rowIndex, column, columnIndex }) {
             {% for th in values['th'] %}
+            {% if 'style' in th %}
             if (column.property === "{{ th['field'] }}") {
                 {% for style in th['style'] %}
                 if ({{ style['cond'] }}) {
@@ -381,6 +378,7 @@ var Main = {
                 }
                 {% end %}
             }
+            {% end %}
             {% end %}
         },
 
