@@ -15,10 +15,7 @@ def th(name, field, width='*', editor='text', data=[]):
     }
 
 
-
-
 class VueTablesModule(tornado.web.UIModule):
-    
     def __get_values(self, values, key, def_value=None):
         if key in values:
             self.values[key] = values[key]
@@ -61,9 +58,11 @@ class VueTablesModule(tornado.web.UIModule):
                     if isinstance(op, str):
                         th['options'][i] = { 'label': op, 'value': op }
 
-
             if 'style' in th:
                 self.values['cell_style'] = 'default'
+            else:
+                th['style'] = []
+
 
             if not ('search' in th and th['search'] == 'false'):
                 self.values['search_fields'].append(th['field'])
@@ -71,11 +70,10 @@ class VueTablesModule(tornado.web.UIModule):
             self.values['th'].append(th)
 
         self.__get_values(values, 'row_style')
-
         self.__get_values(values, 'default_sort')
 
-
         return self.values
+
 
     def render(self, name, p0, p1, values):
         return self.render_string(

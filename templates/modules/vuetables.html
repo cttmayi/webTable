@@ -377,9 +377,9 @@ var Main = {
         cellClassName ({ row, rowIndex, column, columnIndex }) {
             {% for th in values['th'] %}
             if (column.property === "{{ th['field'] }}") {
-                {% if 'style' in th %}
-                if ({{ th['style']['cond'] }}) {
-                    return "{{ th['style']['style'] }}"
+                {% for style in th['style'] %}
+                if ({{ style['cond'] }}) {
+                    return "{{ style['style'] }}"
                 }
                 {% end %}
             }
