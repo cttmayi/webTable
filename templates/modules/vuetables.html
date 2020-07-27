@@ -47,7 +47,7 @@
     {% if th['editor'] != 'text' %}
         <vxe-form-item title="{{ th['name'] }}" field="{{ th['field'] }}" span="24" reset-value=""
 
-        {% if th['editor'] == 'edit' %}
+        {% if th['editor'] == 'edit' or th['editor'] == 'textarea' %}
         :item-render="{name: 'input', defaultValue: ''}"
         {% end %}
         {% if th['editor'] == 'select' %}
@@ -302,19 +302,14 @@ var Main = {
 
                 let id = value[values['id']]
                 let params
-                {% for th in values['th'] %}
-                    field = "{{ th['field'] }}"
-                    {% if th['editor'] != 'text' %}
-                        if (field in data.data) {
-                            value[field] = data.data[field]
-                            params = new URLSearchParams();
-                            params.append('id', id);
-                            params.append('field', field );
-                            params.append('value', value[field]);
-                            axios.post(url_update, params)
-                        }
-                    {% end %}
-                {% end %}
+                for (var field in data.data){
+                    value[field] = data.data[field]
+                    params = new URLSearchParams();
+                    params.append('id', id);
+                    params.append('field', field );
+                    params.append('value', value[field]);
+                    axios.post(url_update, params)
+                }
 
                 obj.insertDialog = false
                 obj.tableData.unshift(value)
