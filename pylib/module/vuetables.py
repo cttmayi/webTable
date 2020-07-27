@@ -2,16 +2,16 @@ import tornado.web
 import conf
 
 def th(name, field, width='*', editor='text', data=[]):
-    list_data = []
+    options = []
     for d in data:
-        list_data.append({ 'label': d, 'value': d })
+        options.append({ 'label': d, 'value': d })
 
     return {
         'name': name,
         'field': field,
         'width': width,
         'editor': editor,
-        'data': str(list_data)
+        'options': options
     }
 
 
