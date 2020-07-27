@@ -10,6 +10,7 @@ class DbDummy():
     def create(self, table_name):
         self.__contents__ = {}
         self.__contents__[table_name] = {}
+        return True
 
 
     def query_id(self, table_name, id):

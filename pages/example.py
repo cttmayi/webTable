@@ -6,7 +6,7 @@ import conf
 
 DB = 'example' # 数据库名称
 db = conf.db
-db.create(DB) # 如没有数据库, 创建数据库
+init = db.create(DB) # 如没有数据库, 创建数据库
 
 
 def html(p0, p1):
@@ -97,18 +97,18 @@ def delete(p0, p1, db_id):
 
 ##########################################################
 # 范例 Dummy数据库的内容插入
+if init:
+    def db_insert(db, id, price):
+        data = {
+            'itemid' : str(id),
+            'productid' : 'PD',
+            'listprice' : str(price),
+            'unitcost' : '200',
+            'attr1' : 'A',
+            'status' : 'O',
+        }
+        id = db.insert('example', data, id)
 
-def db_insert(db, id, price):
-    data = {
-        'itemid' : str(id),
-        'productid' : 'PD',
-        'listprice' : str(price),
-        'unitcost' : '200',
-        'attr1' : 'A',
-        'status' : 'O',
-    }
-    id = db.insert('example', data, id)
-
-for i in range(2):
-    db_insert(db, 'TV.'+str(i), 1000)
-db_insert(db, 'TVD', 300)
+    for i in range(2):
+        db_insert(db, 'TV.'+str(i), 1000)
+    db_insert(db, 'TVD', 300)

@@ -23,6 +23,8 @@ class DbElasticsearch():
     def create(self, table_name):
         if not self.es.indices.exists(index=table_name):
             self.es.indices.create(index=table_name)
+            return True
+        return False
 
 
     def query_id(self, table_name, id):
