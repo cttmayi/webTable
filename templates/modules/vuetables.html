@@ -146,6 +146,9 @@
                 {% if th['editor'] == 'select' %}
                 :edit-render="{name: 'select', options: {{ th['options'] }} , autoselect: true, events: {input: inputChangeEvent} }"
                 {% end %}
+                {% if th['editor'] == 'textarea' %}
+                :edit-render="{name: 'textarea', defaultValue: ''}"
+                {% end %}
             ></vxe-table-column>
             {% end %}
 

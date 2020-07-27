@@ -34,7 +34,7 @@ def html(p0, p1):
         {'name': 'Cost', 'field': 'unitcost', 'width': '200',
             'editor': 'select', 'options': ['', '100', '200', '300'], # Options 简洁表达方式，lable和value一致
             'style': [{'cond': "row.unitcost > 150", 'style': 'bg-green'}]},
-        {'name': 'Status', 'field': 'status', 'width': '*', 'editor': 'edit', 
+        {'name': 'Status', 'field': 'status', 'width': '*', 'editor': 'textarea', 
             'search': 'false'}, # 字段默认可搜索， 设定不可搜索（'search': 'false'）
     ]
 
