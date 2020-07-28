@@ -55,6 +55,9 @@ class VueTablesModule(tornado.web.UIModule):
             if 'editor' not in th:
                 th['editor'] = 'text'
 
+            if 'sortable' not in th:
+                th['sortable'] = 'true'
+
             if 'options' in th:
                 for i in range(len(th['options'])):
                     op = th['options'][i]

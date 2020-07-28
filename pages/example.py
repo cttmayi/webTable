@@ -25,7 +25,7 @@ def html(p0, p1):
 
     vuetables['th'] = [
         {'name': 'ID', 'field': 'itemid', 'width': '100', # name为显示名, field为Key名称. width为100,
-            'fixed': 'left'}, # fixed 表示是否固定
+            'fixed': 'left', 'sortable': 'false'}, # fixed 表示是否固定
 
         {'name': 'PID', 'field': 'productid', 'width': '200',
             'editor': 'select', 'options': [

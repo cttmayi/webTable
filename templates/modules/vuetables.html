@@ -138,7 +138,9 @@
 
             {% for th in values['th'] %}
             <vxe-table-column
+                {% if th['sortable'] == 'true' %}
                 sortable
+                {% end %}
                 field="{{ th['field'] }}"
                 title="{{ th['name'] }}"
                 width="{{ th['width'] }}"
