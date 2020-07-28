@@ -30,7 +30,8 @@ def html(p0, p1):
                 { 'label': '产品2', 'value': 'P2' }, 
                 { 'label': '产品3', 'value': 'P3' }, 
             ],},
-        {'name': 'Price', 'field': 'listprice', 'width': '200', 'editor': 'edit'},
+        {'name': 'Price', 'field': 'listprice', 'width': '200', 'editor': 'edit',
+            'tooltip': 'unitcost'},
         {'name': 'Cost', 'field': 'unitcost', 'width': '200',
             'editor': 'select', 'options': ['', '100', '200', '300'], # Options 简洁表达方式，lable和value一致
             'style': [{'cond': "row.unitcost > 150", 'style': 'bg-green'}]},

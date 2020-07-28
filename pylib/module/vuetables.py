@@ -43,6 +43,7 @@ class VueTablesModule(tornado.web.UIModule):
         self.values['th'] = []
         self.values['search_fields'] = []
 
+
         for th in values['th']:
             if 'width' not in th:
                 th['width'] = '*'
@@ -53,11 +54,15 @@ class VueTablesModule(tornado.web.UIModule):
 
             if 'editor' not in th:
                 th['editor'] = 'text'
+
             if 'options' in th:
                 for i in range(len(th['options'])):
                     op = th['options'][i]
                     if isinstance(op, str):
                         th['options'][i] = { 'label': op, 'value': op }
+            if 'tooltip' in th:
+                self.values['tooltip'] = 'enable'
+                
 
             if not ('search' in th and th['search'] == 'false'):
                 self.values['search_fields'].append(th['field'])

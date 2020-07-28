@@ -89,6 +89,9 @@
 
             :row-class-name="rowClassName"
             :cell-class-name="cellClassName"
+            {% if 'tooltip' in values %}
+            :tooltip-config="{enabled: true, contentMethod: showTooltipMethod}"
+            {% end %}
             :loading="loading"
             :toolbar="tableToolbar"
             :height = "height"
@@ -367,6 +370,23 @@ var Main = {
                 this.textToolbarData = recordNumberStr
             }
         },
+
+        showTooltipMethod ({ type, column, row, items, _columnIndex }) {
+            const { property } = column
+
+            {% for th in values['th'] %}
+            {% if 'tooltip' in th %}
+            if (property === "{{ th['field'] }}") {
+                if (type === 'body') {
+                    return row["{{ th['tooltip'] }}"] ? row["{{ th['tooltip'] }}"] : null
+                }
+            }
+            {% end %}
+            {% end %}
+
+            return ''
+        },
+
 
         cellClassName ({ row, rowIndex, column, columnIndex }) {
             {% for th in values['th'] %}
