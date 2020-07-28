@@ -62,7 +62,6 @@ class VueTablesModule(tornado.web.UIModule):
                         th['options'][i] = { 'label': op, 'value': op }
             if 'tooltip' in th:
                 self.values['tooltip'] = 'enable'
-                
 
             if not ('search' in th and th['search'] == 'false'):
                 if 'field' in th:
@@ -72,6 +71,7 @@ class VueTablesModule(tornado.web.UIModule):
 
         self.__get_values(values, 'row_style')
         self.__get_values(values, 'default_sort')
+        self.__get_values(values, 'extend')
 
         return self.values
 

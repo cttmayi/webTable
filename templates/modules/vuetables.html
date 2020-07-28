@@ -123,25 +123,20 @@
             {% if 'delete' in values['toolbar'] %}
             <vxe-table-column type="checkbox" width="30" fixed=left></vxe-table-column>
             {% end %}
-            <vxe-table-column type="seq" width="50" fixed=left></vxe-table-column>
-            {% for th in values['th'] %}
 
-            {% if 'extend' in th %}
-            <vxe-table-column type="expand" 
-                title="{{ th['name'] }}" 
-                width="{{ th['width'] }}"
-            >
-            <template v-slot="{ row, rowIndex }">
-                {% if 'field' in th %}
-                <span>{[ row.{{ th['field'] }}?row.{{ th['field'] }}:'' ]}</span>
-                {% end %}
-            </template>
-            <template v-slot:content="{ row, rowIndex }">
-                {{ th['extend']['value'] }}
-            </template>
+            {% if 'extend' in values %}
+            <vxe-table-column type="expand" title="E" fixed=left width="40">
+                <template v-slot="{ row, rowIndex }">
+                </template>
+                <template v-slot:content="{ row, rowIndex }">
+                    {{ values['extend']['value'] }}
+                </template>
             </vxe-table-column>
+            {% end %}
 
-            {% else %}
+            <vxe-table-column type="seq" width="50" fixed=left></vxe-table-column>
+
+            {% for th in values['th'] %}
             <vxe-table-column
                 sortable
                 field="{{ th['field'] }}"
@@ -166,7 +161,6 @@
                 :edit-render="{name: 'textarea', defaultValue: ''}"
                 {% end %}
             ></vxe-table-column>
-            {% end %}
             {% end %}
 
         </vxe-table>

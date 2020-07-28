@@ -19,13 +19,13 @@ def html(p0, p1):
     vuetables['toolbar'] = ['insert', 'delete', 'export'] # 配置 Toolbar 按钮
     vuetables['height'] = 'window.innerHeight - 150' # '700' # 设定表格高度, 可用javacript代码, 或者字符串('600'等).
 
+    vuetables['extend'] = {
+        'value': '{[ row.listprice ]}'
+    }
 
     vuetables['th'] = [
         {'name': 'ID', 'field': 'itemid', 'width': '100', # name为显示名, field为Key名称. width为100,
             'fixed': 'left'}, # fixed 表示是否固定
-        {'name': 'EXT', 'width': '50', 
-            'extend': {'value': '{[ row.listprice ]}'}
-        },
 
         {'name': 'PID', 'field': 'productid', 'width': '200',
             'editor': 'select', 'options': [
@@ -43,7 +43,6 @@ def html(p0, p1):
         {'name': 'Status', 'field': 'status', 'width': '*', 'editor': 'textarea', 
             'search': 'false'}, # 字段默认可搜索， 设定不可搜索（'search': 'false'）
     ]
-
 
     vuetables['summary'] = { 
         'height': '100px', 
