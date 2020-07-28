@@ -23,7 +23,7 @@ def html(p0, p1):
     vuetables['th'] = [
         {'name': 'ID', 'field': 'itemid', 'width': '100', # name为显示名, field为Key名称. width为100,
             'fixed': 'left'}, # fixed 表示是否固定
-        {'name': 'EXT', 'field': 'productid', 'width': '50', 
+        {'name': 'EXT', 'width': '50', 
             'extend': {'value': '{[ row.listprice ]}'}
         },
 

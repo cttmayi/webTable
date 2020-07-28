@@ -65,7 +65,8 @@ class VueTablesModule(tornado.web.UIModule):
                 
 
             if not ('search' in th and th['search'] == 'false'):
-                self.values['search_fields'].append(th['field'])
+                if 'field' in th:
+                    self.values['search_fields'].append(th['field'])
 
             self.values['th'].append(th)
 

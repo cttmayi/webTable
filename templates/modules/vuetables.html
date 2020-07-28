@@ -132,7 +132,9 @@
                 width="{{ th['width'] }}"
             >
             <template v-slot="{ row, rowIndex }">
-              <span>{[ row.{{ th['field'] }}?row.{{ th['field'] }}:'' ]}</span>
+                {% if 'field' in th %}
+                <span>{[ row.{{ th['field'] }}?row.{{ th['field'] }}:'' ]}</span>
+                {% end %}
             </template>
             <template v-slot:content="{ row, rowIndex }">
                 {{ th['extend']['value'] }}
