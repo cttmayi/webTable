@@ -22,6 +22,7 @@ class VueTablesModule(tornado.web.UIModule):
         elif def_value is not None:
             self.values[key] = def_value
 
+
     def __values(self, values):
         self.values = {}
         self.values['prop'] = {}
@@ -57,12 +58,6 @@ class VueTablesModule(tornado.web.UIModule):
                     op = th['options'][i]
                     if isinstance(op, str):
                         th['options'][i] = { 'label': op, 'value': op }
-
-            if 'style' in th:
-                self.values['cell_style'] = 'default'
-            else:
-                th['style'] = []
-
 
             if not ('search' in th and th['search'] == 'false'):
                 self.values['search_fields'].append(th['field'])
