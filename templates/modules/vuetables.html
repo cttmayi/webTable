@@ -395,7 +395,7 @@ var Main = {
             {% if 'tooltip' in th %}
             if (property === "{{ th['field'] }}") {
                 if (type === 'body') {
-                    return row["{{ th['tooltip'] }}"] ? row["{{ th['tooltip'] }}"] : null
+                    return {{ th['tooltip']['value'] }}
                 }
             }
             {% end %}
