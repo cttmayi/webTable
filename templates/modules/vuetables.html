@@ -125,6 +125,21 @@
             {% end %}
             <vxe-table-column type="seq" width="50" fixed=left></vxe-table-column>
             {% for th in values['th'] %}
+
+            {% if 'extend' in th %}
+            <vxe-table-column type="expand" 
+                title="{{ th['name'] }}" 
+                width="{{ th['width'] }}"
+            >
+            <template v-slot="{ row, rowIndex }">
+              <span>{[ row.{{ th['field'] }}?row.{{ th['field'] }}:'' ]}</span>
+            </template>
+            <template v-slot:content="{ row, rowIndex }">
+                {{ th['extend']['value'] }}
+            </template>
+            </vxe-table-column>
+
+            {% else %}
             <vxe-table-column
                 sortable
                 field="{{ th['field'] }}"
@@ -150,6 +165,7 @@
                 {% end %}
             ></vxe-table-column>
             {% end %}
+            {% end %}
 
         </vxe-table>
     </template>
@@ -166,6 +182,7 @@ var url_update = '/{{ conf.site }}_update/{{ name }}/{{ p0 }}/{{ p1 }}';
 var url_delete = '/{{ conf.site }}_delete/{{ name }}/{{ p0 }}/{{ p1 }}';
 
 var Main = {
+    delimiters: ['{[', ']}'],
     data() {
         return {
             filterName: '',
