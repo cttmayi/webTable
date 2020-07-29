@@ -6,14 +6,13 @@ import conf
 
 DB = 'example' # 数据库名称
 db = conf.db
-init = db.create(DB) # 如没有数据库, 创建数据库
+init = db.create(DB) # 如没有数据库, 创建数据库，返回False表示之前已创建过。
 
 
 def html(p0, p1):
     ret = {}
 
     vuetables = {}
-    # vuetables['name'] = 'app' 
     vuetables['id'] = 'itemid' # 唯一 field ID, 用于修改数据
     vuetables['default_sort'] = {'field': 'itemid', 'order': 'desc'} # 排序，asc/desc
     vuetables['toolbar'] = ['insert', 'delete', 'export'] # 配置 Toolbar 按钮
