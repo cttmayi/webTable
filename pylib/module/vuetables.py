@@ -75,6 +75,7 @@ class VueTablesModule(tornado.web.UIModule):
         self.__get_values(values, 'row_style')
         self.__get_values(values, 'default_sort')
         self.__get_values(values, 'extend')
+        self.__get_values(values, 'upload')
 
         return self.values
 

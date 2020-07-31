@@ -119,6 +119,10 @@
                 {% if 'export' in values['toolbar'] %}
                 <vxe-button icon="fa fa-plus" @click="exportDataEvent">导出</vxe-button>
                 {% end %}
+                {% if 'upload' in values %}
+                <vxe-button icon="fa fa-plus" @click="uploadFileEvent">导入</vxe-button>
+                {% end %}
+
             </template>
             {% if 'delete' in values['toolbar'] %}
             <vxe-table-column type="checkbox" width="30" fixed=left></vxe-table-column>
@@ -384,6 +388,37 @@ var Main = {
             else {
                 this.textToolbarData = recordNumberStr
             }
+        },
+
+        uploadFileEvent () {
+            obj = this
+
+            this.$refs.xTable.readFile({
+            multiple: true,
+            types: values['upload']['types'], // ['xlsx', 'csv', 'html']
+            }).then(evnt => {
+                let files = evnt.target.files
+                let fileReader = new FileReader()
+                fileReader.onload = (ev) => {
+                    let csvData = ev.target.result
+                    let tableData = []
+                    // 解析数据
+                    csvData.split('\n').forEach((row, index) => {
+
+                        let item = {}
+                        {% if 'upload' in values%}
+                        {{ values['upload']['code'] }}
+                        {% end %}
+                        if (item){
+                            tableData.push(item)
+                        }
+
+                    })
+
+                    obj.tableData = tableData
+                }
+                fileReader.readAsText(files[0])
+            })
         },
 
         showTooltipMethod ({ type, column, row, items, _columnIndex }) {

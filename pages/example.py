@@ -18,6 +18,18 @@ def html(p0, p1):
     vuetables['toolbar'] = ['insert', 'delete', 'export'] # 配置 Toolbar 按钮，分别是添加，删除，导出CVS按钮
     vuetables['height'] = 'window.innerHeight - 150' # '700' # 设定表格高度, 可用javacript代码, 或者字符串('600'等).
 
+    vuetables['upload'] = {
+        'types': ['log', 'txt'],
+        # row index => item
+        'code':''' 
+item = {'itemid': row.slice(0) }
+
+
+
+'''
+    }
+
+
     vuetables['extend'] = {
         'value': '{[ row.listprice ]}' # 展开功能， 用VUE表达式，展开后的显示数据 
     }
