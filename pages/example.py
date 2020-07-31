@@ -31,7 +31,9 @@ item = {'itemid': row.slice(0) }
 
 
     vuetables['extend'] = {
-        'value': '{[ row.listprice ]}' # 展开功能， 用VUE表达式，展开后的显示数据 
+        'code': '''
+item = row.listprice
+'''
     }
 
     vuetables['th'] = [
