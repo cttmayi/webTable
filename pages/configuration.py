@@ -20,17 +20,12 @@ def html(p0, p1):
 
     vuetables['height'] = 'window.innerHeight - 50'
 
-    options = ['']
-    options.extend(configuration.TYPES)
-
     vuetables['th'] = [
-    {'name': 'Group', 'field': 'group', 'width': '200', 'editor': 'edit', 'fixed': 'left'},
-    {'name': 'Type', 'field': 'type', 'width': '200', 'editor': 'select', 'fixed': 'left',
-        'options': options},
-    {'name': 'Name', 'field': 'name', 'width': '200', 'editor': 'edit', 'fixed': 'left'},
-    {'name': 'Key', 'field': 'key', 'width': '200', 'editor': 'edit'},
-    {'name': 'Value', 'field': 'value', 'width': '200', 'editor': 'edit'},
-    {'name': 'Comment', 'field': 'commnet', 'width': '*', 'editor': 'edit'},
+        {'name': 'Group', 'field': 'group', 'width': '200', 'editor': 'edit', 'fixed': 'left'},
+        {'name': 'Name', 'field': 'name', 'width': '200', 'editor': 'edit', 'fixed': 'left'},
+        {'name': 'Key', 'field': 'key', 'width': '200', 'editor': 'edit'},
+        {'name': 'Value', 'field': 'value', 'width': '200', 'editor': 'edit'},
+        {'name': 'Comment', 'field': 'commnet', 'width': '*', 'editor': 'edit'},
     ]
 
     ret['title'] = 'Configuration'
